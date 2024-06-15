@@ -22,7 +22,7 @@ A specialized agent to communicate with the note taker and the conversation agen
 
 
 - **Procurement-Specialist-Agent:**
-  -**Role:** Provides expertise on specific categories and sub-categories, instructs the Note-Take-Agent on what information to capture next. Decides whether to add a message to the pool if needed.
+  - **Role:** Provides expertise on specific categories and sub-categories, instructs the Note-Take-Agent on what information to capture next. Decides whether to add a message to the pool if needed.
   - **Interactions:** Receives user inputs through the conversation-agent in the form of queries about a request, then advises on the next steps to capture key information from the user. Advises the conversation-agent on next steps and informs the note taker which information to record. If the user changes the category, it advises on the next actor (another specialized agent).
   - **State Updates:** Ensures required information is being captured as per the category-specific requirements.
 
@@ -66,3 +66,10 @@ A specialized agent to communicate with the note taker and the conversation agen
 - **State Schema:** Must be flexible enough to handle various categories and sub-categories.
 - **Message Pool:** Ensure efficient message passing and handling to avoid delays.
 - **Error Handling:** Robust mechanisms to handle unexpected inputs or errors in message passing.
+
+### Message Formats
+- **Query Message:** { "type": "query", "content": "I need to procure laptops for my team.", "from": "user" }
+- **Instruction Message:** { "type": "instruction", "content": "Please ask for laptop specifications...", "from": "Procurement-Specialist-Agent", "to": ["Conversation-Agent", "Note-Take-Agent"] }
+- **State Update Message:** { "type": "state_update", "content": { "captured_info": {"num_laptops": 10, "last_change": "1 year ago", "ram_requirements": "16GB", "os": "Windows 10", "project_based": False } }, "from": "Note-Take-Agent" }
+- **Validation Message:** { "type": "validation", "content": "User request within guidelines.", "from": "Guardrails-Agent" }
+- **Completion Message:** { "type": "completion", "content": "All required information gathered.", "from": "Conversation-Agent" }
