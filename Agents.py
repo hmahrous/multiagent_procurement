@@ -6,6 +6,7 @@ from langchain_core.tools import tool
 import json
 from State import initial_state
 from MessagingPoolManager import MessagingPoolManager
+import chainlit as cl
 
 
 @tool
@@ -16,6 +17,7 @@ def dummy_tool(
     pass
 
 #OPENAI_API_KEY=""
+
 
 # Initialize the pool manager
 pool_manager = MessagingPoolManager()
@@ -44,13 +46,11 @@ Alwas respond in one of the two formats below:
     "role": "assistant"
     "to": "user"}}
 """,
-    "Procurement-Specialist-Agent": """You are the Procurement Specialist Agent. Your role is to determine the next steps for procurement. Make sure you get required information from users
+    "Procurement-Specialist-Agent": """You are the Procurement Specialist Agent. Your role is to determine the next steps for procurement. Make sure you get required information
 Respond in the format:
 {{
     "type": "instruction",
     "content": "<your instructions>",
-    "category": "<your category>",
-    "subcategory": "<your subcategory>"
     "from": "Procurement-Specialist-Agent",
     "role": "assistant",
     "to": ["Conversation-Agent", "Note-Take-Agent"]
@@ -139,14 +139,17 @@ def run_agents():
                         initial_state["required_info_template"] = response["content"]
                     if response["type"] == "state_update":
                         initial_state["captured_info"] = response["content"]
-                if role=="Procurement-Specialist-Agent":
-                    initial_state["category"] = response["category"]
-                    initial_state["subcategory"] = response["subcategory"]
-                print()
-                print(initial_state)
-                print()
+                # if role=="Procurement-Specialist-Agent":
+                #     initial_state["category"] = response["category"]
+                #     initial_state["subcategory"] = response["subcategory"]
+                #print(initial_state)
+                #print()
         if to_user:
+            print(response)
             return response["content"]
+        
+
+
         
             # user_reply = input(f'{messages[-1]["content"]}')
             # user_query = {"type": "query", "content": user_reply, "from": "user", "role":"user"}
