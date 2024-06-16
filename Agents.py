@@ -16,7 +16,7 @@ def dummy_tool(
     """create something."""
     pass
 
-#OPENAI_API_KEY=""
+OPENAI_API_KEY="your_api_key"
 
 
 # Initialize the pool manager
@@ -115,7 +115,7 @@ pool_manager.subscribe("Guardrails-Agent", ["Conversation-Agent", "user"])
 
 # Example function to run all agents
 to_user = False
-def run_agents():
+async def run_agents():
     while True:
         for role, agent_executor in agents.items():
             initial_state["current_speaker"] = role
@@ -134,6 +134,7 @@ def run_agents():
                 pool_manager.add_message(response)
                 print(f'{role}:{response["content"]}')
                 print()
+                await cl.Message(f'{role}:{response["content"]}').send()
                 if role=="Note-Take-Agent":
                     if response["type"] == "template":
                         initial_state["required_info_template"] = response["content"]

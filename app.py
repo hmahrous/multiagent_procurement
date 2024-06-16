@@ -9,7 +9,7 @@ async def main(message: cl.message):
     pool_manager.add_message(user_query)
     initial_state["user_query"] = message.content
     initial_state["query_fulfilled"]=False
-    response = run_agents()
+    response = await run_agents()
     await cl.Message(content=response).send()
 
 
