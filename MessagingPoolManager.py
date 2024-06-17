@@ -49,7 +49,7 @@ class MessagingPoolManager:
                     for message in messages:
                         self.mark_as_processed(agent_name, message['id'])
                     print(f"unprocessed messages for agent are: {messages}")
-                    message_contents = {"from": ("&").join([message["from"] for message in messages]), 
+                    message_contents = {"from": (" & ").join([message["from"] for message in messages]), 
                                         "content": ("\n").join([f'{message["from"]}:{message["content"]}' for message in messages]),
                                         "role": "assistant"}
                     await self.send_message(agent_name, message_contents)
