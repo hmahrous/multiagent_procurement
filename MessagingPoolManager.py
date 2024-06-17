@@ -2,6 +2,8 @@ from typing import List, Dict, Any, Annotated
 import chainlit as cl
 from Agents import agents
 import json
+from State import initial_state
+
 
 class MessagingPoolManager:
     def __init__(self, agents):
@@ -58,10 +60,20 @@ class MessagingPoolManager:
         agent = self.get_agent_by_name(agent_name)
         print(f"agent called is {agent}")
         if agent:
+            initial_state["current_speaker"] = agent_name
             #print(message)
             response = agent.receive_message(message)
             if response:
                 formatted_response = self.format_response(agent_name, response)
+                if agent_name=="Note-Take-Agent":
+                    if formatted_response["type"] == "template":
+                        initial_state["required_info_template"] = formatted_response["content"]
+                    if formatted_response["type"] == "state_update":
+                        initial_state["captured_info"] = formatted_response["content"]
+                if agent_name=="Conversation-Agent":
+                    if formatted_response["to"] == "user":
+                        initial_state["query_fulfilled"] = True
+
                 # print(f"formatted response is {formatted_response}")
                 # print(type(formatted_response))
                 await cl.Message(f'{agent_name}:{formatted_response["content"]}').send()
@@ -114,6 +126,7 @@ class MessagingPoolManager:
                     }
 
     async def prompt_user_input(self, message: Dict[str, Any] = None):
+        initial_state["current_speaker"] = "user"
         # if message:
         #     await cl.Message(content=message['content'], author=message['from']).send()
         user_input = await cl.AskUserMessage(content=f"{message['content']}").send()  # Use Chainlit's input method
@@ -128,6 +141,7 @@ class MessagingPoolManager:
             "role": "user",
             "to": "Conversation-Agent"
         }
+        initial_state["user_query"] = content
         self.add_message(message)
         await self.process_messages()
 

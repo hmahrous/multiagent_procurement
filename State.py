@@ -12,7 +12,7 @@ class AgentState(TypedDict):
 
 # Initial state
 initial_state = AgentState(
-    current_speaker="user",
+    current_speaker="",
     user_query="",
     query_fulfilled=False,
     category=None,

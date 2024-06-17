@@ -2,7 +2,6 @@ from typing import List, Dict, Any, Annotated
 from langchain.agents import AgentExecutor, create_openai_functions_agent
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain_openai import ChatOpenAI
-from State import initial_state
 import chainlit as cl
 from langchain.vectorstores.faiss import FAISS
 from dotenv import find_dotenv, load_dotenv
