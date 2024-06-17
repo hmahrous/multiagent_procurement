@@ -51,7 +51,7 @@ class MessagingPoolManager:
                     for message in messages:
                         self.mark_as_processed(agent_name, message['id'])
                     print(f"unprocessed messages for agent are: {messages}")
-                    if agent_name == "Conversation-Agent":
+                    if agent_name == "Conversation-Agent" or agent_name == "Procurement-Specialist-Agent":
                         message_contents = {"from": (" & ").join([message["from"] for message in messages]), 
                                         "content": f'your history conversation: {str(initial_state["messages"])} \n current query:' +("\n").join([f'{message["from"]}:{message["content"]}' for message in messages]),
                                         "role": "assistant"}
@@ -78,7 +78,6 @@ class MessagingPoolManager:
                 if agent_name=="Conversation-Agent":
                     if formatted_response["to"] == "user":
                         initial_state["query_fulfilled"] = True
-
                 # print(f"formatted response is {formatted_response}")
                 # print(type(formatted_response))
                 await cl.Message(f'{agent_name}:{formatted_response["content"]}').send()
