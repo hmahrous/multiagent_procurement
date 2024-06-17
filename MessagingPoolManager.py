@@ -1,6 +1,6 @@
 from typing import List, Dict, Any, Annotated
 import chainlit as cl
-from Agents2 import agents
+from Agents import agents
 import json
 
 class MessagingPoolManager:
