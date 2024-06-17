@@ -51,8 +51,13 @@ class MessagingPoolManager:
                     for message in messages:
                         self.mark_as_processed(agent_name, message['id'])
                     print(f"unprocessed messages for agent are: {messages}")
-                    message_contents = {"from": (" & ").join([message["from"] for message in messages]), 
-                                        "content": ("\n").join([f'{message["from"]}:{message["content"]}' for message in messages]),
+                    if agent_name == "Conversation-Agent":
+                        message_contents = {"from": (" & ").join([message["from"] for message in messages]), 
+                                        "content": f'your history conversation: {str(initial_state["messages"])} \n current query:' +("\n").join([f'{message["from"]}:{message["content"]}' for message in messages]),
+                                        "role": "assistant"}
+                    else:
+                        message_contents = {"from": (" & ").join([message["from"] for message in messages]), 
+                                        "content":("\n").join([f'{message["from"]}:{message["content"]}' for message in messages]),
                                         "role": "assistant"}
                     await self.send_message(agent_name, message_contents)
 
@@ -129,12 +134,12 @@ class MessagingPoolManager:
         initial_state["current_speaker"] = "user"
         # if message:
         #     await cl.Message(content=message['content'], author=message['from']).send()
-        user_input = await cl.AskUserMessage(content=f"{message['content']}").send()  # Use Chainlit's input method
+        user_input = await cl.AskUserMessage(content=f"{message['content']}", timeout=600).send()  # Use Chainlit's input method
         user_input = user_input["output"]
         #print(f"user input is  {user_input}")
-        await self.add_user_message(user_input)
+        await self.add_user_message(message['content'], user_input)
 
-    async def add_user_message(self, content: str):
+    async def add_user_message(self, query:str, content: str):
         message = {
             "content": content,
             "from": "user",
@@ -142,8 +147,11 @@ class MessagingPoolManager:
             "to": "Conversation-Agent"
         }
         initial_state["user_query"] = content
+        previous_messages = initial_state["messages"]
+        initial_state["messages"] = previous_messages + [{"you": query, "user": content}]
         self.add_message(message)
         await self.process_messages()
+
 
     def get_agent_by_name(self, agent_name: str):
         return self.agents.get(agent_name, None)

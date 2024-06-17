@@ -8,6 +8,6 @@ from MessagingPoolManager import pool_manager
 @cl.on_message
 async def main(message):
     if not pool_manager.pool:
-        await pool_manager.add_user_message(message.content)
+        await pool_manager.add_user_message("", message.content)
     else:
         await pool_manager.process_messages()
