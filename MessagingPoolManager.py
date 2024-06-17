@@ -1,32 +1,27 @@
-from typing import List, Dict, Any
-
 class MessagingPoolManager:
     def __init__(self, agents):
-        self.pool: List[Dict[str, Any]] = []
-        self.subscriptions: Dict[str, List[str]] = {}
-        self.processed_messages: Dict[str, List[str]] = {}
+        self.pool = []
+        self.subscriptions = {}
+        self.processed_messages = {}
         self.msg_id_counter = 1
         self.agents = agents
 
-    def add_message(self, message: Dict[str, Any]):
+    def add_message(self, message):
         message['id'] = self.get_next_msg_id()
         self.pool.append(message)
         print(f"Message added to pool: {message}")
 
-    def subscribe(self, agent_name: str, senders: List[str]):
+    def subscribe(self, agent_name, senders):
         self.subscriptions[agent_name] = senders
         self.processed_messages[agent_name] = []
 
-    def get_messages(self, agent_name: str) -> List[Dict[str, Any]]:
+    def get_messages(self, agent_name):
         senders = self.subscriptions.get(agent_name, [])
-        messages = [
-            msg for msg in self.pool
-            if msg['from'] in senders and msg['id'] not in self.processed_messages[agent_name]
-        ]
+        messages = [msg for msg in self.pool if msg['from'] in senders and msg['id'] not in self.processed_messages[agent_name]]
         print(f"{agent_name} has {len(messages)} messages to process.")
         return messages
 
-    def mark_as_processed(self, agent_name: str, message_id: str):
+    def mark_as_processed(self, agent_name, message_id):
         self.processed_messages[agent_name].append(message_id)
         print(f"Message {message_id} marked as processed by {agent_name}")
 
@@ -43,10 +38,10 @@ class MessagingPoolManager:
                 self.send_message(agent_name, message)
                 self.mark_as_processed(agent_name, message['id'])
 
-    def send_message(self, agent_name: str, message: Dict[str, Any]):
+    def send_message(self, agent_name, message):
         agent = self.get_agent_by_name(agent_name)
         if agent:
             agent.receive_message(message)
 
-    def get_agent_by_name(self, agent_name: str):
+    def get_agent_by_name(self, agent_name):
         return next((agent for agent in self.agents if agent.name == agent_name), None)
