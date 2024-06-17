@@ -14,7 +14,7 @@ class MessagingPoolManager:
     def add_message(self, message: Dict[str, Any]):
         message['id'] = self.get_next_msg_id()
         self.pool.append(message)
-        print(f"Message added to pool: {message}")
+        #print(f"Message added to pool: {message}")
 
     def subscribe(self, agent_name: str, senders: List[str]):
         self.subscriptions[agent_name] = senders
@@ -26,13 +26,13 @@ class MessagingPoolManager:
             msg for msg in self.pool
             if msg['from'] in senders and msg['id'] not in self.processed_messages[agent_name]
         ]
-        print(f"{agent_name} has {len(messages)} messages to process.")
+        #print(f"{agent_name} has {len(messages)} messages to process.")
         return messages
 
     def mark_as_processed(self, agent_name: str, message_id: str):
         self.processed_messages[agent_name].append(message_id)
-        print(f"Message {message_id} marked as processed by {agent_name}")
-        print(f'processed messages are: {self.processed_messages}')
+        # print(f"Message {message_id} marked as processed by {agent_name}")
+        # print(f'processed messages are: {self.processed_messages}')
 
     def get_next_msg_id(self):
         msg_id = f"msg{self.msg_id_counter}"
@@ -46,22 +46,24 @@ class MessagingPoolManager:
             else:
                 for agent_name in self.subscriptions:
                     messages = self.get_messages(agent_name)
-                    print(f"unprocessed messages for agent are: {messages}")
                     for message in messages:
                         self.mark_as_processed(agent_name, message['id'])
-                    await self.send_message(agent_name, messages)
+                    print(f"unprocessed messages for agent are: {messages}")
+                    message_contents = {"from": ("&").join([message["from"] for message in messages]), 
+                                        "content": ("\n").join([f'{message["from"]}:{message["content"]}' for message in messages]),
+                                        "role": "assistant"}
+                    await self.send_message(agent_name, message_contents)
 
-
-    async def send_message(self, agent_name: str, messages: list):
+    async def send_message(self, agent_name: str, message: Dict[str, Any]):
         agent = self.get_agent_by_name(agent_name)
         print(f"agent called is {agent}")
         if agent:
-            print(("\n").join(messages))
-            response = agent.receive_message(("\n").join(messages))
+            #print(message)
+            response = agent.receive_message(message)
             if response:
                 formatted_response = self.format_response(agent_name, response)
-                print(f"formatted response is {formatted_response}")
-                print(type(formatted_response))
+                # print(f"formatted response is {formatted_response}")
+                # print(type(formatted_response))
                 await cl.Message(f'{agent_name}:{formatted_response["content"]}').send()
                 self.add_message(formatted_response)
                 if formatted_response.get('to') == 'user':
@@ -116,7 +118,7 @@ class MessagingPoolManager:
         #     await cl.Message(content=message['content'], author=message['from']).send()
         user_input = await cl.AskUserMessage(content=f"{message['content']}").send()  # Use Chainlit's input method
         user_input = user_input["output"]
-        print(f"user input is  {user_input}")
+        #print(f"user input is  {user_input}")
         await self.add_user_message(user_input)
 
     async def add_user_message(self, content: str):

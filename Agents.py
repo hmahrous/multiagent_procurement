@@ -19,11 +19,16 @@ class AgentMain:
 
     def receive_message(self, message):
         # Handle received message
-        response = self.agent.invoke({"messages": [message]})
+        print(f'input:{message}')
+        if isinstance(message, list):
+            response = self.agent.invoke({"messages": message})
+        else:
+            response = self.agent.invoke({"messages": [message]})
         try:
             answer = response["output"]
         except:
             answer = response
+        print(f"output{answer}")
         return answer
 
 
@@ -38,8 +43,6 @@ prompt = ChatPromptTemplate.from_messages([
 # Create the chain
 agent_notetaker = prompt | llm | StrOutputParser()
 agents["Conversation-Agent"] = AgentMain(agent_notetaker)
-
-
 
 # Create the agent using the prompt and the tool
 prompt = ChatPromptTemplate.from_messages(
