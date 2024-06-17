@@ -49,14 +49,15 @@ class MessagingPoolManager:
                     print(f"unprocessed messages for agent are: {messages}")
                     for message in messages:
                         self.mark_as_processed(agent_name, message['id'])
-                        await self.send_message(agent_name, message)
+                    await self.send_message(agent_name, messages)
 
-    async def send_message(self, agent_name: str, message: Dict[str, Any]):
+
+    async def send_message(self, agent_name: str, messages: list):
         agent = self.get_agent_by_name(agent_name)
         print(f"agent called is {agent}")
         if agent:
-            print(message)
-            response = agent.receive_message(message)
+            print(("\n").join(messages))
+            response = agent.receive_message(("\n").join(messages))
             if response:
                 formatted_response = self.format_response(agent_name, response)
                 print(f"formatted response is {formatted_response}")

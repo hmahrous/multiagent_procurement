@@ -73,7 +73,7 @@ prompt = ChatPromptTemplate.from_messages([
     MessagesPlaceholder(variable_name="messages"),])
 # Create the chain
 agent_guardrails= prompt | llm | StrOutputParser()
-agents["Guardrails-Agent"] = AgentMain(agent_notetaker)
+agents["Guardrails-Agent"] = AgentMain(agent_guardrails)
 
 
 
