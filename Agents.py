@@ -10,6 +10,7 @@ import chainlit as cl
 from langchain.vectorstores.faiss import FAISS
 from dotenv import find_dotenv, load_dotenv
 from utils import *
+from prompts import system_prompts
 
 
 
@@ -57,170 +58,11 @@ pool_manager = MessagingPoolManager()
 # Define global variable for state
 
 # Define the system prompts for each agent
-system_prompts = {
-    "Conversation-Agent": """You are the Conversation Agent. You manage the flow of conversation between the Procurement Specialist Agent and the user. If a user needs something, you forward the request to the Procurement Specialist Agent. If the Procurement Specialist Agent needs more information, you must tell the user to provide the necessary details.
-
-Always respond in one of the two formats below:
-1.
-{{
-    "type": "query",
-    "content": "<your message>",
-    "from": "Conversation-Agent",
-    "role": "assistant",
-    "to": "Procurement-Specialist-Agent"
-}}
-
-2.
-{{
-    "type": "completion",
-    "content": "<your message>",
-    "from": "Conversation-Agent",
-    "role": "assistant",
-    "to": "user"
-}}
-""",
-    "Procurement-Specialist-Agent": """You are the Procurement Specialist Agent. Your role is to determine the next steps for procurement based on the user's requests and the detailed process breakdown. Ensure you gather all required information. You can also use the knowledge base tool for more information on a subject.
-
-The procurement process includes the following key steps:
-1. Submit Request
-2. Cost Commitment Approvals
-3. Contracting
-4. Risk Assessments
-5. Contract Approvals
-6. Final Submission and Approval
-
-Ensure all required information is collected at each step for efficient and compliant processing of sourcing requests.
-
-Example conversation:
-Chatbot:
-"Welcome! Let's start with the basics. What is the name of your project?"
-User:
-"Test GL 1306"
-Chatbot:
-"Great! Please provide a brief description of your project."
-User:
-"This is a test project for GL 1306."
-Chatbot:
-"Please select all vendor products you will be using."
-User:
-"Procure-to-Pay (P2P) from SAP"
-Chatbot:
-"Product added. Any other products?"
-Chatbot:
-"Will Chain IQ be involved in this process? (Yes/No)"
-User:
-"Yes"
-Chatbot:
-"Noted. Please specify the different contract manager if applicable."
-User:
-"John Doe"
-Chatbot:
-"Who will be the cost commitment approvers for this request?"
-User:
-"Lardera, Ludovica and Kamm, Adrian"
-Chatbot:
-"Approvers added. Any changes?"
-Chatbot:
-"Which part of UBS is the business/budget owner?"
-User:
-"Group Functions, Group Corporate Services, Grp Human Resources & Corporate Services, Supply Chain"
-Chatbot:
-"Is the business/budget owner outside the contract manager's segment? (Yes/No)"
-User:
-"Yes"
-Chatbot:
-"Please specify the business/budget owner."
-User:
-"Supply Chain (sg)"
-Chatbot:
-"Do you have any supporting documents to attach? (Yes/No)"
-User:
-"Yes, here are the files."
-Chatbot:
-"Files uploaded successfully."
-Chatbot:
-"Let's assess the risks. Is this project outsourcing relevant? (Yes/No)"
-User:
-"Yes"
-Chatbot:
-"Please provide details about the outsourcing activities."
-User:
-"Outsourcing to Application Service Providers."
-Chatbot:
-"Does the outsourcing include a regulated activity, parts of a UBS control function, or parts of a UBS risk function? (Yes/No)"
-User:
-"No"
-Chatbot:
-"Does your initiative involve outsourcing of UBS employees/resources to the vendor only, or does it involve other elements (e.g., IT infrastructure)?"
-User:
-"Mainly outsourcing of employees."
-Chatbot:
-"What is the estimated percentage of employees/resources outsourced vs. the total number of employees managing the process and/or retained internally at UBS? (≥ 50%, 30-50%, <30%)"
-User:
-"30-50%"
-Chatbot:
-"Let's review your request: [Summary of inputs]. Does everything look correct? (Yes/No)"
-User:
-"Yes, submit."
-Chatbot:
-"Request submitted successfully."
-Chatbot:
-"Your request has been returned for corrections. Please review the comments and make the necessary changes."
-User:
-"What needs to be changed?"
-Chatbot:
-"Approver's comment: 'Please provide more details about the business owner.'"
-User:
-"Okay, I will update that."
-
-Respond in the format:
-{{
-    "type": "instruction",
-    "content": "<your instructions>",
-    "from": "Procurement-Specialist-Agent",
-    "role": "assistant",
-    "to": ["Conversation-Agent", "Note-Take-Agent"]
-}}""",
-    "Note-Take-Agent": """You are the Note-Take Agent. Your role is to form templates for required information based on the instructions from the Procurement-Specialist-Agent. Capture the user's responses, update the state, and confirm the updates to the pool.
-
-If you receive an instruction containing the word 'specifications', respond with an appropriate empty template.
-If you receive a user response, capture the information and update the state, then send confirmation to the pool.
-
-Ensure your reply is in one of the required formats, nothing else:
-For template:
-{{
-    "type": "template",
-    "content": <template>,
-    "from": "Note-Take-Agent",
-    "role": "assistant",
-}}
-
-For state update:
-{{
-    "type": "state_update",
-    "content": {{"captured_info": <captured_info>}},
-    "from": "Note-Take-Agent",
-    "role": "assistant"
-}}
-""",
-    "Guardrails-Agent": """You are the Guardrails Agent. Your role is to only validate user queries for compliance.
-
-Respond with validation status in the format:
-{{
-    "type": "validation",
-    "content": "<validation_message>",
-    "from": "Guardrails-Agent",
-    "role": "assistant"
-}}
-"""
-}
-
-
 # Define the roles for each agent
 roles = ["Conversation-Agent", "Procurement-Specialist-Agent", "Note-Take-Agent", "Guardrails-Agent"]
 
 # Define the LLM
-llm = ChatOpenAI(model="gpt-4-turbo")
+llm = ChatOpenAI(model="gpt-4o")
 
 # Define tools (empty for this example)
 tools = [dummy_tool]
@@ -263,9 +105,38 @@ async def run_agents():
                 response = agent_executor.invoke({"messages": messages})
                 response = response["output"]
                 try:
-                    response = json.loads(response)
+                    if not isinstance(response, dict):
+                        response = json.loads(response)
                 except:
-                    continue
+                    try:
+                        if role == "Procurement-Specialist-Agent":
+                            response = {
+                                    "type": "instruction",
+                                    "content": response,
+                                    "from": "Procurement-Specialist-Agent",
+                                    "role": "assistant",
+                                    "to": ["Conversation-Agent", "Note-Take-Agent"]
+                                }
+                        elif role == "Note-Take-Agent":
+                            response = {
+                                "type": "template",
+                                "content": response,
+                                "from": "Note-Take-Agent",
+                                "role": "assistant",
+                            }
+                        elif role == "Guardrails-Agent":
+                            response = {
+                                    "type": "validation",
+                                    "content": response,
+                                    "from": "Guardrails-Agent",
+                                    "role": "assistant"
+                                }
+                        else:
+                            response = {"content": response,
+                                        "from": role,
+                                        "role": "assistant"}
+                    except:
+                        continue
                 pool_manager.add_message(response)
                 print(f'{role}:{response["content"]}')
                 print()
@@ -280,6 +151,8 @@ async def run_agents():
                 #     initial_state["subcategory"] = response["subcategory"]
                 #print(initial_state)
                 #print()
+
+        await cl.Message(f'{role}:{response["content"]}').send()    
         if to_user:
             print(response)
             return response["content"]
