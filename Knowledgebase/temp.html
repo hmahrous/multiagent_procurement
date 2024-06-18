@@ -1,0 +1,1276 @@
+<h1>1. Title: Initiate a Sourcing Request</h1>
+
+<pre><code>1.  Question: Do you want to make changes to an existing Contract? (Yes/No)
+•   Options:
+•   Yes
+•   No
+•   Instruction:
+•   If “Yes,” the user needs to indicate the Contract Worker (CW) they want to change.
+2.  Search Bar:
+•   Prompt:
+•   “Please select the contract you would like to work with”
+•   Search Criteria:
+•   Contract Name
+•   Contract ID
+•   Third Party
+•   Contract Manager
+3.  Additional Information:
+•   Contract Status:
+•   If the contract is expired, the user can request an extension/renewal within 1 month after expiry.
+•   If the contract is in draft amendment status, it must be published first before raising another amendment/extension/renewal.
+•   Support Contact:
+•   Contact Chain IQ or Support Team if needed.
+4.  Navigation:
+•   Back Button
+•   Continue Button (Inactive until selection is made)
+</code></pre>
+
+<h1>2. Title: Initiate a Sourcing Request</h1>
+
+<p>Section: Initiative Description</p>
+
+<p>Link: See sourcing questions</p>
+
+<p>Provides additional guidance or frequently asked questions related to the sourcing process.
+Field: Title (max. 120 Characters)</p>
+
+<p>Prompt:
+"Please provide a short descriptive title following the Naming Convention."
+Instruction:
+The title should be concise and adhere to the UBS Naming Convention.
+Tooltip:
+The short description will be shared with GenIQ for their activities.
+Field: Objectives &amp; Deliverables (min. 255 Characters)</p>
+
+<p>Prompt:
+Please specify:
+Business need
+Project scope
+Deliverables expected
+Impact if not approved
+Type of contract to be signed with selected vendor (supply order, master agreement, etc.)
+Type of cost (one-time, recurring, etc.)
+Instruction:
+This detailed description helps ChainIQ understand what the sourcer needs to work on the request.
+It is also picked up in a report that goes into group tech approval forum.
+Additional Information:</p>
+
+<p>Naming Convention:
+Users are reminded to follow the UBS Naming Convention when choosing a name for their request.
+A link to "Request Naming Convention" is provided for detailed guidelines.</p>
+
+<h1>3. Title: What is the type of Good or Service?</h1>
+
+<pre><code>1.  Prompt:
+•   “Please make sure you select the correct type. If you are not sure and need further advice, please contact your local Client Service Desk.”
+2.  Field: Select the appropriate Category
+•   Search Bar:
+•   Users can search for their category.
+•   Dropdown Menu:
+•   Lists various categories such as:
+•   Awards
+•   Legal
+•   LP Cloud Move Test - L1
+•   Market Data Services (MDS)
+•   Marketing &amp; Comm.
+•   Money Managers Services
+•   Personnel Services
+•   Post Trades (Post Trade Providers)
+•   Real Estate and Logistics
+•   Test Postores01
+3.  Selection Example:
+•   Selected Category:
+•   IT Software &gt; Application Service Providers - XaaS (IaaS, StaaS, etc.)
+•   Tooltip:
+•   There are two levels of selection:
+1.  IT Software
+2.  XaaS
+4.  Additional Information:
+•   Expected Amount:
+•   The expected amount will be automatically split by calendar year.
+•   Users can manually change the allocation if needed.
+•   Start &amp; End Date:
+•   Should represent the foreseen time frame for the provision/contract.
+5.  Navigation:
+•   Field to Add Expected Amount:
+•   Users can specify the expected amount, currency, exchange rate, and total USD.
+</code></pre>
+
+<h1>4. What is the type of Good or Service?</h1>
+
+<pre><code>1.  Selected Category:
+•   Example:
+•   Personnel Services &gt; Employee benefits
+2.  Prompt:
+•   “At least one entry is required”
+•   Field: Type of Good/Services
+3.  Section: Deal Financials and Duration
+•   Prompt:
+•   “Provide your available money to spend”
+•   Fields:
+•   Start Date: DD.MM.YYYY (Required)
+•   End Date: DD.MM.YYYY (Required)
+•   Expected Amount: (Required)
+•   Add Button: To add the financial details.
+4.  Popup: Category Selection
+•   Message:
+•   “Please note that the category choice will drive the further process. Please make sure you add all applicable subcategories.”
+•   “If you need to change your category choice later, you may have to perform certain process steps again, even if the request has already reached the contract signature stage.”
+•   Confirm Button:
+•   Users need to confirm their category selection to proceed.
+5.  Additional Information:
+•   Expected Amount:
+•   Note that the expected amount will be automatically split by calendar year.
+•   Users can still change the allocation manually if needed.
+•   Start &amp; End Date:
+•   Should represent the foreseen time frame for the provision/contract.
+</code></pre>
+
+<h1>5. Deal Financials and Duration</h1>
+
+<pre><code>1.  Field: Deal Presenter
+•   Prompt:
+•   “Who presents in the approval forum the request”
+2.  Section: Deal Financials and Duration
+•   Prompt:
+•   “Provide your available money to spend”
+•   Fields:
+•   Start Date: DD.MM.YYYY (Required)
+•   End Date: DD.MM.YYYY (Required)
+•   Expected Amount: (Required)
+•   Year, Currency, Expected Amount, Exchange Rate, Total USD:
+•   Table format for entering multiple entries.
+•   Add Button: To add the financial details.
+3.  Fields:
+•   Funding Type:
+•   Dropdown with options such as:
+•   D &amp; E (Development and Engineering)
+•   SD (Service Delivery)
+•   Tooltip: Glemo struggled a bit to find this code.
+•   Cost Center:
+•   Example:
+•   OU (Base):
+•   LKG-C - Process Design &amp; Transformation
+•   Cost Center:
+•   RCE2 - Customer Buy Exp and SC Transform CH
+•   GCRS Company:
+•   CB40 - UBS BSA (CH Ops) - Zurich
+•   OU (Deployment):
+•   LKG-C - Process Design &amp; Transformation
+•   Cost Center:
+•   RCE2 - Customer Buy Exp and SC Transform CH
+•   GCRS Company:
+•   CB40 - UBS BSA (CH Ops) - Zurich
+4.  Additional Information:
+•   Expected Amount:
+•   The expected amount will be automatically split by calendar year.
+•   Users can still change the allocation manually if needed.
+•   Start &amp; End Date:
+•   Should represent the foreseen time frame for the provision/contract.
+</code></pre>
+
+<h1>6. Cost Breakdown</h1>
+
+<pre><code>1.  Section: Cost Breakdown
+•   Prompt:
+•   “Provide the cost breakdown for mentioned Expected Amount”
+2.  Field: Spend Type
+•   Options:
+•   Software - Internally Generated
+•   Software - Expensed
+•   Software Maintenance
+•   Software - Purchased
+•   Software Maintenance - Expensed
+•   Licenses
+•   Yash_Contract start
+•   Yash_Purchase date
+•   Selected Example:
+•   Software - Internally Generated
+3.  Field: Expected Delivery Date
+•   Example Date:
+•   18.08.2024
+4.  Field: Cost
+•   Example Cost:
+•   USD 1500000
+5.  Add Button:
+•   Adds the cost breakdown entry to the table below.
+6.  Table:
+•   Columns:
+•   Spend Type
+•   Expected Delivery Date
+•   Currency
+•   Breakdown Cost
+•   Total USD
+•   Prompt:
+•   “At least one entry is required”
+7.  Instruction:
+•   Steps to follow:
+1.  Select spend type.
+2.  Insert date.
+3.  Insert cost.
+4.  Click on Add.
+5.  The item appears in the table below.
+•   Tooltip:
+•   You can split among spend types.
+8.  Additional Information:
+•   Notification:
+•   “This amount will be frozen from your Business Division / Group Functions Function’s Consulting Operating Plan.”
+</code></pre>
+
+<h1>7. Is the spend funded out of the integration budget?</h1>
+
+<pre><code>1.  Question:
+•   “Is the spend funded out of the integration budget?”
+•   Options:
+•   Yes
+•   No
+•   Tooltip:
+•   “A spend is funded out of integration budget when the costs will be charged to a dedicated integration cost center(s).”
+2.  Section: Additional Information for Global Software Asset Management (GSAM) Team
+3.  Question:
+•   “Do we intend to replace an existing technology?”
+•   Options:
+•   Yes
+•   No
+4.  Field: Duration for Decommission
+•   Prompt:
+•   “What is the technology being replaced and the time line to decommission the existing technology?”
+</code></pre>
+
+<h1>8. Title: AppDir: Application, UBS Products, and Vendor Products</h1>
+
+<pre><code>1.  Question:
+•   “Do you already know the software you are buying?”
+•   Options:
+•   Yes
+•   No
+•   Tooltip:
+•   For big new products, probably the answer is “No,” and there is a tender to be done.
+2.  Instruction:
+•   “Once you have selected the software, it will need to be registered in the Application directory.”
+•   Link:
+•   Provides a link to the Application directory for registering the software.
+•   Note:
+•   “The application and Product ID will need to be provided latest at the Contract Manager confirmation prior to the Contract signature.”
+</code></pre>
+
+<h1>9. AppDir: Application, UBS Products, and Vendor Products</h1>
+
+<pre><code>1.  Question:
+•   “Do you already know the software you are buying?”
+•   Options:
+•   Yes
+•   No
+•   Tooltip:
+•   For big new products, probably the answer is “No,” and there is a tender to be done.
+2.  Instruction:
+•   “Once you have selected the software, it will need to be registered in the Application directory.”
+•   Link:
+•   Provides a link to the Application directory for registering the software.
+•   Note:
+•   “The application and Product ID will need to be provided latest at the Contract Manager confirmation prior to the Contract signature.”
+3.  Field: GUID, NAME or ShortName
+•   Example Entry:
+•   arib
+•   Dropdown Menu:
+•   Suggestions such as:
+•   6360ED0DDBD749998644208214079BCB (SAP ARIBA, Ariba)
+•   69E0E6A3277B44A5B2B89D70759F6E65 (BNP Paribas Online Portal, BNP Login)
+•   A33AA81A5F94BD592FE5628C3D1D174 (BNP PARIBAS PBLINK, BNP)
+•   B9C388115F9497AF8D4F76F3CC675C (BNP Paribas, BNP Paribas)
+4.  Field: Apps or UBS Products
+•   Example Entry:
+•   Cirutuo Category Mgmt
+•   Prompt:
+•   “At least one entry is required”
+5.  Button: Add
+•   Adds the selected application to the table below.
+6.  Instruction:
+•   Steps to follow:
+1.  Select the application.
+2.  Check the product and permit.
+3.  Click on “Add.”
+4.  The app disappears from this field and appears in the table below.
+</code></pre>
+
+<h1>10. Title: AppDir: Application, UBS Products, and Vendor Products</h1>
+
+<pre><code>1.  Field: Vendor Product
+•   Prompt:
+•   “Please select all Vendor Products”
+•   Field:
+•   “Vendor Product *”
+•   Add Button:
+•   Adds the selected vendor product to the table below.
+2.  Table:
+•   Columns:
+•   Category
+•   IT Capability 1
+•   IT Capability 2
+•   Vendor
+•   Vendor Product
+•   Standard Status
+•   Action
+•   Example Entry:
+•   Category: Business Applications
+•   IT Capability 1: Supply Chain Management
+•   IT Capability 2: Procurement and Supply Chain
+•   Vendor: SAP
+•   Vendor Product: Procure-to-Pay (P2P)
+•   Standard Status: Standard
+</code></pre>
+
+<h1>11. Title: Chain IQ Involvement</h1>
+
+<pre><code>1.  Section: Chain IQ Involvement
+•   Instruction:
+•   “For additional clarity, please refer to the Countries in scope and Category overview.”
+•   Note:
+•   “Countries in scope” = PDF file
+•   “Category overview” = Excel file
+2.  Question:
+•   “Can you confirm that Chain IQ will be involved in the process?”
+•   Options:
+•   Yes
+•   No
+•   Additional Field if “No” is selected:
+•   Question:
+•   “Reason for not involving Chain IQ”
+•   Dropdown Options:
+•   Sensitive/Confidential Project
+•   Internal Consulting
+•   Below CIQ involvement threshold for the category/country not covered by CIQ
+•   Tooltip:
+•   “If you say ‘No,’ you need to say why.”
+•   “Sensitive/Confidential” goes directly to the supply chain.
+•   “Below CIQ involvement” goes to the PNSS team.
+3.  Expandable Sections:
+•   Specify a different Contract Manager
+•   Confirm/Change the Cost Commitment Approvers
+•   Business/Budget Owner outside the Contract Manager’s Segment
+•   Attachments
+</code></pre>
+
+<h1>12. Title: Confirm/Change the Cost Commitment Approvers</h1>
+
+<pre><code>1.  Section: Confirm/Change the Cost Commitment Approvers
+•   Instruction:
+•   “Approvers are defaulted to the Contract manager reporting line (minimum ranks to meet the policy). These can be changed to another person of the required rank.”
+•   Note:
+•   You can change the approver, and the list is already filtered for the right seniority.
+2.  Fields:
+•   Cost Commitment Approver 1
+•   Example: Lardera, Ludovica (43501188)
+•   Minimum Rank: Managing Director
+•   Cost Commitment Approver 2
+•   Example: Egger, Harald (00101069)
+•   Minimum Rank: Managing Director
+</code></pre>
+
+<h1>13. Title: Business/Budget Owner outside the Contract Manager’s Segment</h1>
+
+<pre><code>1.  Section: Business/Budget Owner outside the Contract Manager’s Segment
+•   Question:
+•   “Which part of UBS is the business/budget owner?”
+2.  Fields:
+•   Division:
+•   Example: Group Functions
+•   Area:
+•   Example: Group Corporate Services
+•   Unit:
+•   Example: Grp Human Resources &amp; Corporate Services
+•   Sector:
+•   Example: Supply Chain
+•   Segment:
+•   Example: Supply Chain (sg)
+3.  Section: Attachments
+•   Allows for adding attachments relevant to the request.
+4.  Additional Info:
+•   GCRS Info: “The information entered here will drive the business approval.”
+</code></pre>
+
+<h1>14. Title: Attachments</h1>
+
+<pre><code>1.  Section: Attachments
+•   Prompt:
+•   “Provide supporting documents for your request.”
+2.  Fields:
+•   Description:
+•   Add a brief description of what the document relates to.
+•   File Upload:
+•   Drag and drop a file to attach, or browse to select a file.
+3.  Add Button:
+•   Adds the attachment to the request.
+</code></pre>
+
+<h1>15. Title: Risk Applicability</h1>
+
+<pre><code>1.  Section: Risk Applicability
+•   Request ID:
+•   Example: Test GL 1306 (Request ID: 365500)
+•   Guidance Links:
+•   ROCC, BCM, Records Management, Intermediary Service, Data Handling, 3PISA, Subcontractor
+2.  Subsection: Outsourcing
+•   Regulatory Outsourcing Control Check (ROCC)
+•   “Because you have picked the categories noted below, you are required to complete a risk assessment for Regulatory Outsourcing Control Check.”
+•   Table:
+•   Columns: L1, L2, L3, L4, Outsourcing Relevant
+•   Example Entry: IT Software, Application Service Providers, Yes
+3.  Questions:
+•   “Does the service fall under any of the following categories that are typically not considered as outsourcing services?”
+•   Options:
+•   Third Party staff augmentation, staff operating on UBS premises under UBS’s direct supervision and control
+•   Relationships with correspondent banks, agents, and custodians (internal and external)
+•   Clearing and settlement arrangements between clearing houses, central counterparties, and settlement institutions and their members
+•   Market information services (e.g., Bloomberg, Moody’s, Standard &amp; Poor’s) and common network infrastructure (e.g., Visa, Mastercard)
+•   Functions that are legally required to be performed by external providers (e.g., statutory audit)
+•   Purchasing of goods; facilities management (consisting of the following services: cleaning, gardening, catering, vending, clerical, travel, and premises maintenance, design, and build-out)
+•   Law firms and consultants providing advice; health insurance
+•   Telecommunication services and public utilities
+•   None of the above
+4.  Additional Questions:
+•   “Does the service fall under any of the types of activities that are considered as ineligible for outsourcing as per the TPRM Guideline?”
+•   Options: Yes, No
+5.  Data Inconsistencies Popup:
+•   Message:
+•   “While the category selected is considered outsourcing relevant, your response indicates that the request includes activities ineligible for outsourcing. Please reach out to the ROCC Support Team for guidance on the inconsistency.”
+•   Buttons:
+•   ROCC Support Team, Close
+•   Tooltip:
+•   “This is a double check; if you flag ‘Yes,’ this pop-up appears.”
+</code></pre>
+
+<h1>16. Title: Regulated Activity / Internal Control Function / Risk Function</h1>
+
+<pre><code>1.  Section: Regulated Activity / Internal Control Function / Risk Function
+•   Question:
+•   “Does the outsourcing include a regulated activity, parts of a UBS control function or parts of a UBS risk function?”
+•   Options:
+•   Yes
+•   No
+•   Tooltip:
+•   Following questions appear if “No” is selected.
+2.  Section: Complexity of the outsourced activities
+•   Instruction:
+•   “To comply with regulatory requirements, we need to assess the complexity of the outsourced services. As such, please provide responses to the following questions to support the determination of complexity of the outsourcing.”
+•   Question:
+•   “Does your initiative involve outsourcing of UBS employees/resources to the vendor only or does it involve also other elements (e.g., IT infrastructure)?”
+•   Options:
+•   Mainly outsourcing of employees
+•   Outsourcing includes other elements as well
+•   Question:
+•   “What is the estimated percentage of employees/resources outsourced vs. the total number of employees managing the process and/or retained internally at UBS?”
+•   Options:
+•   ≥ 50%
+•   30-50%
+•   &lt; 30%
+•   Tooltip:
+•   This question is a follow-up to the previous one.
+</code></pre>
+
+<h1>17. Additional Outsourcing Questions</h1>
+
+<pre><code>1.  Question:
+•   “Does the outsourcing involve managed services including transfer of knowledge and/or core capabilities to the service provider?”
+•   Options:
+•   Yes
+•   No
+•   Other
+2.  Question:
+•   “Will the cost to run the outsourced process and service become a barrier to exit the relationship with the vendor and internalize?”
+•   Options:
+•   Very likely
+•   Likely
+•   Unlikely
+3.  Question:
+•   “Is the estimated cost to insource the service/process (transition/change-the-bank cost) expected to supersede the amount we will pay to the vendor to run the service/process?”
+•   Options:
+•   Transition cost to insource will be ≥ 3 times the annual vendor fees to provide the service
+•   Transition cost to insource will be 1-3 times the annual vendor fees to provide the service
+•   Transition cost to insource will be &lt; 1 times the annual vendor fees to provide the service
+4.  Question:
+•   “How long will it take to internalize the process/service covered by this sourcing request or to transition it to another service provider once it has been outsourced?”
+•   Options:
+•   ≥ 12 months
+•   7-11 months
+•   6 months or less
+</code></pre>
+
+<h1>18. Business Continuity Management (BCM)</h1>
+
+<pre><code>1.  Section: Business Continuity Management (BCM)
+•   Fields:
+•   BCM Critical: Yes/No
+•   BCM Tier: NA
+2.  Section: Business Activity and DRP Dependency
+•   Instruction:
+•   “Please select all the UBS Business Activities and DRPs that the third party contract will support.”
+•   Note:
+•   DRP = Departmental Recovery Plan
+•   Users will need help from the BCM team to get clarifications to fill this part of the questionnaire.
+3.  Fields:
+•   Region
+•   Country
+•   City
+•   Division
+•   Example: Group Functions
+•   Unit
+•   Example: Grp Human Resources &amp; Corporate Services
+•   Sector
+•   Example: Supply Chain
+•   Area
+•   Example: Group Corporate Services
+•   Business Activities in Scope
+•   Example: GCS - Real Estate &amp; Services
+•   Applicable UBS DRP
+•   Example: 19255-DRP-Group Functions-Americas-Grp Human Resources &amp; Corporate Services
+4.  Table:
+•   Columns:
+•   BA ID
+•   Business Activities in Scope
+•   UBS DRP ID
+•   Applicable UBS DRP
+•   Tier
+•   IBS Relevant
+•   Action
+•   Example Entry:
+•   BA ID: 5332
+•   Business Activities in Scope: GCS - Real Estate &amp; Services
+•   UBS DRP ID: 19255
+•   Applicable UBS DRP: Unknown
+•   Tier: Tier 3
+•   IBS Relevant: No
+5.  Additional Information:
+•   Instruction:
+•   Use the GCRS hierarchy filters (Division/Unit/Area, etc.) that the third-party contract supports to find the correct Business Activity (BA) and Departmental Recovery Plan (DRP) as per the UBS Business Continuity Application (BCA) in BCM that the third-party contract supports.
+•   Note:
+•   You do not have to select all filters, and the filter data will not be stored. However, being more specific will reduce the number of potential BAs and DRPs to choose from.
+</code></pre>
+
+<h1>19. Data Handling</h1>
+
+<pre><code>1.  Section: Data Handling
+•   Instruction:
+•   “Select the category of UBS data that the vendor/third party is supposed to process, use or otherwise come into possession of.”
+•   Dropdown Options:
+•   Strictly Confidential
+•   Confidential
+•   Internal
+•   Public/None
+•   Note:
+•   Different flags appear below depending on the selected item.
+2.  Questions:
+•   “Select all applicable categories of data which the third party will process (incl. access, handle and/or storage) outside of UBS premises/systems:”
+•   Options:
+•   Client Identifiable Data (CID)
+•   Yes
+•   No
+•   If Yes:
+•   Type of clients the CID relates to:
+•   Individual/Natural person clients
+•   Institutional/Corporate clients
+•   Prospective clients
+•   Business Division Owning the data:
+•   Group Functions
+•   Wealth Management
+•   Wealth Management Americas
+•   Personal &amp; Corporate Banking
+•   Investment Bank
+•   Asset Management
+•   CID Type:
+•   Category A: Direct CID
+•   Category B: Indirect sensitive IDs for CID
+•   Category C: Combination of multiple attributes which may result to CID
+•   Category D: Non-sensitive identifiers (NSI) substituting Category A and/or Category B
+•   Employee Identifiable Data (EID)
+•   Yes
+•   No
+•   Unpublished Price Sensitive Information (UPSI)
+•   Yes
+•   No
+3.  Additional Information:
+•   Note:
+•   Guidance in infoboxes and additional links to deep dive.
+•   Provided indicative assessments on the above data points, to the best of your understanding of the scope of your proposed engagement. These data points can be updated once the engagement is final.
+</code></pre>
+
+<h1>20. Data Handling (Public/None)</h1>
+
+<pre><code>1.  Section: Data Handling
+•   Instruction:
+•   “Select the category of UBS data that the vendor/third party is supposed to process, use or otherwise come into possession of.”
+•   Dropdown Options:
+•   Strictly Confidential
+•   Confidential
+•   Internal
+•   Public/None
+•   Note:
+•   If “Public/None” is selected, the checkboxes for selecting data categories are disabled.
+2.  Questions:
+•   “Select all applicable categories of data which the third party will process (incl. access, handle and/or storage) outside of UBS premises/systems:”
+•   Options:
+•   Client Identifiable Data (CID)
+•   Yes (Disabled if “Public/None” is selected)
+•   No (Disabled if “Public/None” is selected)
+•   Employee Identifiable Data (EID)
+•   Yes (Disabled if “Public/None” is selected)
+•   No (Disabled if “Public/None” is selected)
+•   Unpublished Price Sensitive Information (UPSI)
+•   Yes (Disabled if “Public/None” is selected)
+•   No (Disabled if “Public/None” is selected)
+3.  Additional Information:
+•   Note:
+•   Provided indicative assessments on the above data points, to the best of your understanding of the scope of your proposed engagement. These data points can be updated once the engagement is final.
+</code></pre>
+
+<h1>21. Information Security (3PISA)</h1>
+
+<pre><code>1.  Section: Information Security (3PISA)
+•   Note:
+•   3PISA = Old name of OCRA.
+•   Instruction:
+•   Explanation about data accessibility based on environment control.
+2.  Questions:
+•   “Is the service or product provided by the third party supplied solely from UBS premises or an approved Vendor ODC?”
+•   Options:
+•   Yes
+•   No
+•   “Will the third party access, transport, store, archive, process or destroy UBS data?”
+•   Options:
+•   Yes
+•   No
+•   “Will the service or product involve the use of a third party application or permanent network connectivity to UBS?”
+•   Options:
+•   Yes
+•   No
+•   “Does the service involve XaaS?”
+•   Options:
+•   Yes
+•   No
+•   Tooltip:
+•   XaaS: Anything as a Service (e.g., Software as a Service, Infrastructure as a Service).
+</code></pre>
+
+<h1>22. Records Management (RM)</h1>
+
+<pre><code>1.  Section: Records Management (RM)
+•   Instruction:
+•   “Please evaluate whether specific records management requirements must be followed when engaging with the vendor by selecting the correct scenario.”
+•   Questions:
+•   “What is the purpose of the contract and will records be processed?”
+•   “Will the request contain the purchase of solely physical goods or supply of a service where no UBS records will be processed?”
+•   Options:
+•   Yes
+•   No
+•   Note:
+•   If “No” is selected, additional questions appear.
+2.  Additional Questions (if “No” is selected):
+•   “Please select the applicable option:”
+•   Options:
+•   Final work product from the service (e.g., office files, PDF document) qualifies as a record and will be provided to a UBS person.
+•   Supply of a service using UBS infrastructure where UBS records will be created, processed or stored on UBS infrastructure/using UBS software.
+•   Supply of a service using vendor infrastructure. UBS records will be created, processed or stored using vendor’s software.
+3.  Additional Information:
+•   Support:
+•   For further assistance, consult the Records Management Guidelines or watch the video.
+•   What qualifies as a Record?
+•   Records are a subset of information that memorialize and provide objective evidence of activities and transactions performed, events that occurred, results achieved, or statements made.
+•   How to identify Records?
+•   CASIR is your digital companion for assessing your information asset for mandatory policy requirements. The outcome of CASIR, in combination with your knowledge about the purpose of the contract/service to be provided, will enable you to determine the appropriate scenario.
+•   Note:
+•   RM is not segmentation relevant - within UBS, we segment contracts and the result of the segmentation is (critical - high - medium - low - very low risk).
+</code></pre>
+
+<h1>23. Intermediary Service</h1>
+
+<pre><code>1.  Section: Intermediary Service
+•   Question:
+•   “Will the vendor act as an Intermediary or provide any Intermediary services on behalf of UBS?”
+•   Definition:
+•   Intermediaries are individuals or entities that provide services which involve interacting, on UBS’ behalf, with an external party (e.g., a client, public official), for UBS’ benefit or business advantage.
+•   Options:
+•   Yes
+•   No
+•   Note:
+•   This section is not segmentation relevant.
+</code></pre>
+
+<h1>24. Risk Applicability Summary</h1>
+
+<pre><code>1.  Section: Risk Applicability Summary
+•   Details:
+•   Request ID and Test GL number.
+•   Instructions:
+•   Review the data before submitting to avoid repeating steps.
+2.  Risk Assessments to Trigger:
+•   Regulatory Outsourcing Control Check (ROCC)
+•   Status:
+•   Yes
+•   Instructions:
+•   Raise a ROCC request or link an existing ROCC to this sourcing request in ServiceNow.
+•   Additional guidance provided through a link.
+•   Complexity of the Service/Contract
+•   Status:
+•   Medium
+•   Regulated Activity/Internal Control Function/Risk Function
+•   Status:
+•   Yes
+•   BCM Critical (BCM Tier)
+•   Status:
+•   No
+•   3PISA Required
+•   Status:
+•   Yes
+•   Instructions:
+•   Raise a 3PISA request as soon as the vendor is selected.
+•   If there is an existing 3PISA assessment covering the requested service, link it to the request later in the process.
+•   Further guidance provided through a link.
+•   Other Service-related Risks to be Considered
+•   Instructions:
+•   Ensure all applicable activities are performed and relevant clauses are included in the contract.
+•   CID Access
+•   Status:
+•   Yes
+•   Instructions:
+•   Applicable clauses/exhibits will be included in the contract by Chain IQ. If Chain IQ is not involved, include them yourself.
+•   Additional advice provided through guidelines link.
+</code></pre>
+
+<h1>25. Risk Applicability Summary (Continuation)</h1>
+
+<pre><code>1.  Section: Risk Applicability Summary (Continuation)
+•   Details:
+•   Summary of various risk assessment fields and their statuses.
+2.  Fields:
+•   EID Access
+•   Status:
+•   Yes
+•   Instructions:
+•   Applicable clauses/exhibits will be included in the contract by Chain IQ. If Chain IQ is not involved, include them yourself. Additional advice provided through a link.
+•   Personal Data
+•   Status:
+•   Yes
+•   UPSI (Unpublished Price Sensitive Information)
+•   Status:
+•   Yes
+•   Instructions:
+•   Applicable clauses/exhibits will be included in the contract by Chain IQ. If Chain IQ is not involved, include them yourself. Additional advice provided through a link.
+•   Data Classification
+•   Status:
+•   Internal
+•   Records Management
+•   Status:
+•   No
+•   Intermediary Service
+•   Status:
+•   No
+•   SLA Required
+•   Status:
+•   Yes
+•   Instructions:
+•   An SLA is required and must be included in the contract by Chain IQ. If Chain IQ is not involved, include them yourself. Refer to the SLA Framework to ensure compliance.
+•   Subcontractor Assessment Required
+•   Status:
+•   Yes
+•   Instructions:
+•   If Chain IQ is not involved, ask the vendor to fill out the subcontractor questionnaire provided later in the process and upload it.
+3.  Actions:
+•   Buttons:
+•   Save &amp; Close
+•   Edit
+•   Submit
+</code></pre>
+
+<h1>26. Risk Applicability Summary</h1>
+
+<p>Explanation:
+Purpose: This screen provides a summary of the risk assessments required for a specific sourcing request (Test GL 1306 with Request ID: 365500). It outlines the different risk checks that need to be initiated and ensures that all relevant clauses are included in the contract.
+Sections:
+Risk Assessments to Trigger:</p>
+
+<p>Regulatory Outsourcing Control Check (ROCC):
+Status: Yes
+Action: Raise a ROCC request or link an existing ROCC to this sourcing request in ServiceNow.
+Additional Guidance: A link is provided for further guidance on the ROCC process.
+Complexity of the Service/Contract:</p>
+
+<p>Complexity Level: Medium
+Regulated Activity/Internal Control Function/Risk Function:</p>
+
+<p>Status: Yes
+BCM Critical (BCM Tier):</p>
+
+<p>Status: No
+3PISA Required:</p>
+
+<p>Status: Yes
+Action: Raise a 3PISA request as soon as the vendor is selected. If there is already an existing 3PISA assessment covering the requested service, link it to the request later in the process.
+Additional Guidance: A link is provided for further guidance on the 3PISA process.
+Other Service-Related Risks to Be Considered:</p>
+
+<p>CID Access:
+Status: Yes
+Guidance: The applicable clauses/exhibits will be included in the contract by Chain IQ. If Chain IQ is not involved, you need to include them yourself.
+Personal Data:
+Status: Yes
+UPSI (Unpublished Price Sensitive Information):
+Status: Yes
+Guidance: The applicable clauses/exhibits will be included in the contract by Chain IQ. If Chain IQ is not involved, you need to include them yourself.
+Data Classification:
+Status: Internal
+Records Management:
+Status: No
+Intermediary Service:
+Status: No
+SLA Required:
+Status: Yes
+Guidance: An SLA is required and must be included in the contract by Chain IQ. If Chain IQ is not involved, you need to include them yourself.
+Subcontractor Assessment Required:
+Status: Yes
+Guidance: If Chain IQ is not involved, you need to ask the vendor to fill out the subcontractor questionnaire provided later in the process and upload it.
+Insights:
+Comprehensive Risk Assessment: This summary ensures that all necessary risk assessments are identified and actions are outlined to mitigate potential risks.
+Guidance and Links: The inclusion of links and additional guidance provides users with easy access to more detailed information and helps ensure compliance with internal policies.
+Status Indications: The status (Yes/No) clearly indicates which risk assessments are required, helping users prioritize their actions.
+This summary is crucial for ensuring that all relevant risk assessments are completed and that the sourcing request complies with regulatory and internal standards. By following the outlined actions and guidance, users can efficiently manage the risk assessment process.</p>
+
+<h1>28. Approver Side - Demand Approval Process</h1>
+
+<p>Explanation:
+Purpose: This screen shows the steps in the demand approval process and the status of each step.
+Sections:
+Submit Request: This is the initial submission of the request.
+Cost Commitment Approvals by Finance Policy: The first cost commitment approver reviews and either approves or returns the request.
+Form Change: This indicates any necessary changes or corrections to the form.
+Supply Chain Steps: Subsequent steps handled by the supply chain team.
+Details:
+Process Step: Describes the current step in the process.</p>
+
+<p>Activity: Specific actions taken in each process step.</p>
+
+<p>Owner: Person responsible for the action.</p>
+
+<p>Completion Date: Date when the action was completed.</p>
+
+<p>Status: Current status of the action, such as "Returned" or "Pending".</p>
+
+<p>Days: Number of days taken for the step.</p>
+
+<p>Returned Status: Indicates that the request was returned by the approver for further edits. The requester can make the necessary changes and resubmit.</p>
+
+<p>Pending Status: Indicates that the request is currently awaiting action.</p>
+
+<p>The information provided in this step-by-step guide details the submission, approval, and correction process for a sourcing request. Each step is documented with its purpose, action required, and relevant fields, making it easier to understand the workflow and ensure all necessary information is included for a successful submission.</p>
+
+<h1>29. Approver Dashboard - Overview</h1>
+
+<p>Explanation:
+Purpose: This screen shows the approver's dashboard where they can view and manage requests for approval.
+Sections:
+Pending: Requests awaiting approval.
+Approved: Requests that have been approved.
+Rejected: Requests that have been rejected.
+Details:
+Search Bar: Allows the approver to search for specific requests using various filters such as Request ID, Requestor, Type, Category, Approval Step, and Region.
+Download Table: Provides an option to download the table data as an Excel file for further analysis or record-keeping.
+Request List: Displays details of each request including:
+Request ID: Unique identifier for the request.
+Request Details: Brief description or title of the request.
+L1 Category: High-level category of the request.
+Workflow Template: Template used for the workflow of the request.
+Approval Step: Current step in the approval process.
+Initiation Date: Date when the request was initiated.
+Days Pending: Number of days the request has been pending.
+Requestor: Person who submitted the request.
+Contract Manager: Person responsible for managing the contract.
+Insights:
+Pending Requests: Highlighted to show which requests need immediate attention.
+Approval Efficiency: Shows the time taken for each request to be processed, helping to identify bottlenecks.
+Filter Options: Enhances the ability to quickly locate and manage specific requests based on various criteria.
+This dashboard allows approvers to efficiently manage the approval process by providing a comprehensive overview of all requests. By leveraging the search and filter options, approvers can quickly identify requests that require action and track the status of ongoing approvals.</p>
+
+<h1>30. Approver View - Cost Commitment Approval</h1>
+
+<p>Explanation:
+Purpose: This screen shows the detailed view for cost commitment approval within the approver dashboard.
+Sections:
+Cost Commitment: Section where the cost commitment approvals are managed.
+First Cost Commitment Approver: Displays the first approver's name, status, and decision options.
+Second Cost Commitment Approver: Displays the second approver's name, status, and decision options.
+Business Approvers: Section for business role-based approvers.
+Details:
+Approval Type: Indicates the type of approval required (Cost Commitment, Business, etc.).
+Approver: Shows the name and ID of the approver.
+Decision: Dropdown menu for the approver to choose between "Approve" and "Return to Requestor".
+General Comment: A field for the approver to provide additional comments or feedback related to the approval decision.
+Insights:
+Parallel Approvals: Multiple approvers can review and approve the request in parallel, streamlining the approval process.
+Decision Options: Approvers can either approve the request or return it to the requestor for further modifications.
+Stage Control: Depending on the stage of the process, a returned request can either go back one step or to the beginning, ensuring thorough review and compliance.
+This detailed view for cost commitment approval allows approvers to efficiently manage and track their assigned approvals. By having the option to approve or return requests with comments, approvers can ensure that all necessary information and compliance measures are met before proceeding.</p>
+
+<h1>31. Overview - Approval Process</h1>
+
+<p>Explanation:
+Purpose: This screen provides an overview of the approval process for a sourcing request, detailing each step, the responsible owner, status, and completion dates.
+Sections:
+Demand Approval:</p>
+
+<p>Submit Request:
+Owner: Requestor (Locci, Glemo)
+Completion Date: 13.06.2024
+Status: Submitted
+Cost Commitment Approvals by Finance Policy:
+First Cost Commitment Approver: Lardera, Ludovica
+Second Cost Commitment Approver: Kamm, Adrian
+Status: Pending
+Contracting:</p>
+
+<p>Draft Contract (Supply Chain):
+Draft Contract Upload by Sourcer: Multiple owners, status: Upcoming
+Contract Manager Confirmation: Locci, Glemo, status: Upcoming
+Risk Assessments:</p>
+
+<p>Pre-contract Risk Checks as Required by TPRM:
+Operational Consolidated Risk Assessment: sh-ocra@ubs.com, status: Not Passed
+Legal Contract Check: Multiple owners, status: Upcoming
+Pre-Signature Compliance Check: Multiple owners, status: Upcoming
+Contract Approvals:</p>
+
+<p>Final Contract Reviews and Approvals:
+GSAM Approval: Multiple owners, status: Upcoming
+Commercial Approval: Multiple owners, status: Upcoming
+Commercial Approval Forum (CAF): Multiple owners, status: Upcoming
+Others: Detailed information not provided in the screenshot.
+Details:
+Process Step: Each major phase of the approval process (Demand approval, Contracting, Risk assessments, Contract approvals).
+Activity: Specific actions or tasks within each process step.
+Owner: The individual(s) responsible for completing the activity.
+Completion Date: The date by which the activity should be completed.
+Status: The current state of the activity (Submitted, Pending, Upcoming, Not Passed).
+Days: Number of days spent or required for the activity.
+Insights:
+Sequential and Parallel Approvals: The process includes both sequential steps and tasks that can be managed in parallel by different owners.
+Clear Responsibilities: Each task is assigned to specific individuals or groups, ensuring accountability and clear workflow.
+Status Tracking: The dashboard allows easy tracking of the progress and current status of each task, aiding in timely follow-ups and completion.
+This overview provides a comprehensive snapshot of the entire approval process, from the initial request submission to final contract reviews. By detailing the responsible parties and status of each task, it ensures transparency and efficient management of the sourcing request.</p>
+
+<h1>32. Approver Process Summary</h1>
+
+<p>The approver process in the UBS sourcing system involves multiple steps and roles to ensure that sourcing requests are thoroughly reviewed and approved in compliance with internal policies and regulatory requirements. Here is a detailed summary of the process:</p>
+
+<ol>
+<li>Submit Request
+Initiator: Requestor
+Activity: Submitting the sourcing request.
+Completion: Requestor completes and submits the initial request form.
+Status: Submitted</li>
+<li>Cost Commitment Approvals
+First Cost Commitment Approver
+Role: First-level approver responsible for reviewing the financial aspects of the request.
+Approver Example: Ludovica Lardera
+Activity: Reviewing and approving the cost commitment.
+Status: Pending or Approved
+Second Cost Commitment Approver
+Role: Second-level approver, typically with a higher authority or different focus.
+Approver Example: Adrian Kamm
+Activity: Further review and approval of the cost commitment.
+Status: Pending or Approved</li>
+<li>Contracting
+Draft Contract Upload by Sourcer
+Initiator: Sourcer
+Activity: Uploading the draft contract for the sourcing request.
+Status: Upcoming or Completed
+Contract Manager Confirmation
+Role: Contract Manager
+Activity: Confirming the uploaded contract.
+Status: Upcoming or Confirmed</li>
+<li>Risk Assessments
+Pre-contract Risk Checks (TPRM)
+Role: Multiple roles, including operational, legal, and compliance teams.
+Activities:
+Operational Consolidated Risk Assessment: Performed by operational risk team.
+Legal Contract Check: Performed by legal team.
+Pre-Signature Compliance Check: Performed by compliance team.
+Status: Not Passed, Upcoming, or Passed</li>
+<li>Contract Approvals
+Final Contract Reviews and Approvals
+Role: Multiple approvers, including GSAM, commercial teams, and other relevant stakeholders.
+Activities:
+GSAM Approval: Review by GSAM team.
+Commercial Approval: Review by commercial team.
+CAF (Commercial Approval Forum) Greater than $100K: Review for high-value contracts.
+Other Stakeholders: As required.
+Status: Upcoming, Approved, or Rejected</li>
+<li>Sourcing Overview
+Assigned Sourcer
+Role: Sourcer
+Activity: Managing the sourcing project following the standard sourcing process.
+Status: Ongoing
+Project Reference Number
+Example: WS2036130211
+Activity: Tracking the project in the UBS Sourcing Platform.</li>
+<li>Final Submission and Approval
+Review of Risk Applicability Summary
+Activity: Ensuring all risk assessments are completed and relevant clauses are included in the contract.
+Submission of Final Request
+Role: Requestor
+Activity: Submitting the final request for final approval.
+Status: Submitted
+Key Considerations for Approvers:
+Parallel Approvals: Approvers can work in parallel, especially in the cost commitment approval stage, to expedite the process.
+Returning Requests: Approvers can return requests to the requestor for additional information or corrections. This step allows for iterative refinement before final approval.
+Compliance and Risk Management: Each approval step includes checks for compliance with internal policies and regulatory requirements, ensuring all necessary risk assessments are completed.
+Notes and Tips for Faster Approval:
+Complete Documentation: Ensure all required documents and information are included before submission.
+Clear Communication: Provide clear and concise information to avoid unnecessary returns and delays.
+Follow Guidance: Utilize provided links and additional guidance to ensure compliance and proper completion of each step.
+Monitor Status: Regularly check the status of the request and follow up with approvers if necessary to keep the process moving.
+This detailed overview provides a comprehensive understanding of the approver process, ensuring all steps and requirements are clear for efficient and compliant processing of sourcing requests.</li>
+</ol>
+
+<h1>33. Summary of All Steps:</h1>
+
+<ol>
+<li>Initiate a Sourcing Request
+Questions:
+Do you want to make changes to an existing Contract? (Yes/No)
+Select the contract to work with.
+Additional Info:
+Contract expiration, extension, and amendment details.</li>
+<li>Initiative Description
+Fields:
+Title
+Objectives &amp; Deliverables
+Additional Info:
+UBS Naming Convention.</li>
+<li>What is the type of Good or Service?
+Instructions:
+Select the appropriate Category.
+Seek advice if needed.</li>
+<li>Category Selection Confirmation
+Popup Message:
+Importance of correct category choice.</li>
+<li>Deal Financials and Duration
+Fields:
+Deal Presenter
+Start Date, End Date
+Expected Amount
+Funding Type, Cost Center, PPM Program Code
+Additional Info:
+Details on amount splitting and date selection.</li>
+<li>Cost Breakdown
+Instructions:
+Select spend type, date, and cost.
+Click "Add."
+Fields:
+Spend Type
+Expected Delivery Date
+Cost
+Additional Info:
+Frozen amount information.</li>
+<li>Integration Budget
+Questions:
+Is the spend funded out of the integration budget? (Yes/No)
+Do we intend to replace existing technology? (Yes/No)
+Fields:
+Duration for Decommission.</li>
+<li>AppDir: Application, UBS Products, and Vendor Products
+Questions:
+Do you know the software you are buying? (Yes/No)
+Instructions:
+Select the software and register it in the Application directory.
+Fields:
+GUID, NAME, or ShortName
+Apps or UBS Products
+Vendor Product</li>
+<li>Chain IQ Involvement
+Instructions:
+Refer to the Countries in scope and Category overview.
+Questions:
+Confirm Chain IQ involvement? (Yes/No)
+Additional Field if No:
+Reason for not involving Chain IQ.
+Expandable Sections:
+Different Contract Manager
+Cost Commitment Approvers
+Business/Budget Owner outside the Contract Manager's Segment
+Attachments</li>
+<li>Confirm/Change the Cost Commitment Approvers
+Fields:
+Cost Commitment Approver 1
+Cost Commitment Approver 2</li>
+<li>Business/Budget Owner outside the Contract Manager's Segment
+Fields:
+Division
+Area
+Unit
+Sector
+Segment</li>
+<li>Attachments
+Fields:
+Description
+File Upload</li>
+<li>Risk Applicability
+Subsections:
+Outsourcing
+Regulatory Outsourcing Control Check (ROCC)
+Questions on outsourcing categories.
+Regulated Activity / Internal Control Function / Risk Function
+Complexity of outsourced activities.
+Questions on managed services, cost, and transition time.
+Additional Outsourcing Questions
+Managed services, costs, and timeframes.</li>
+<li>Business Continuity Management (BCM)
+Fields:
+BCM Critical
+BCM Tier
+Subsections:
+Business Activity and DRP Dependency
+Fields: Region, Country, City, Division, Unit, Sector, Area, Business Activities in Scope, Applicable UBS DRP.
+Table with BA ID, Business Activities in Scope, UBS DRP ID, Applicable UBS DRP, Tier, IBS Relevant, Action.</li>
+<li>Data Handling
+Fields:
+Category of UBS data (Strictly Confidential, Confidential, Internal, Public/None)
+Applicable categories of data: CID, EID, UPSI.</li>
+<li>Information Security (3PISA)
+Questions:
+Is the service or product provided by the third party supplied solely from UBS premises or an approved Vendor ODC? (Yes/No)
+Will the third party access, transport, store, archive, process or destroy UBS data? (Yes/No)
+Will the service or product involve the use of a third party application or permanent network connectivity to UBS? (Yes/No)
+Does the service involve XaaS? (Yes/No)</li>
+<li>Records Management (RM)
+Questions:
+What is the purpose of the contract and will records be processed?
+Will the request contain the purchase of solely physical goods or supply of a service where no UBS records will be processed? (Yes/No)
+Additional Questions (if "No" is selected):
+Select the applicable option:
+Final work product qualifies as record.
+Supply of a service using UBS infrastructure.
+Supply of a service using vendor infrastructure.
+Additional Info:
+Support and guidelines for records management.</li>
+<li>Intermediary Service
+Questions:
+Will the vendor act as an Intermediary or provide any Intermediary services on behalf of UBS? (Yes/No)
+Definition:
+Intermediaries are individuals or entities that provide services which involve interacting, on UBS' behalf, with an external party (e.g., a client, public official), for UBS' benefit or business advantage.
+Note:
+This section is not segmentation relevant.</li>
+<li>Risk Applicability Summary
+Details:
+Request ID and Test GL number.
+Instructions:
+Review the data before submitting to avoid repeating steps.
+Risk Assessments to Trigger:
+Regulatory Outsourcing Control Check (ROCC)
+Status: Yes
+Instructions: Raise a ROCC request or link an existing ROCC to this sourcing request in ServiceNow. Additional guidance provided through a link.
+Complexity of the Service/Contract
+Status: Medium
+Regulated Activity/Internal Control Function/Risk Function
+Status: Yes
+BCM Critical (BCM Tier)
+Status: No
+3PISA Required
+Status: Yes
+Instructions: Raise a 3PISA request as soon as the vendor is selected. If there is an existing 3PISA assessment covering the requested service, link it to the request later in the process. Further guidance provided through a link.
+Other Service-related Risks to be Considered
+Instructions: Ensure all applicable activities are performed and relevant clauses are included in the contract.
+CID Access
+Status: Yes
+Instructions: Applicable clauses/exhibits will be included in the contract by Chain IQ. If Chain IQ is not involved, include them yourself. Additional advice provided through guidelines link. 20. Requester Dashboard
+Purpose: View and manage requests.
+Fields:
+Request ID
+Details
+Category
+Status
+Approval steps</li>
+<li>Sourcing Overview
+Purpose: Provide an overview of the sourcing process.
+Fields:
+Sourcing project ID
+Assigned sourcer
+Sourcing gates 23. Approver Side - Demand Approval Process
+Explanation:
+Purpose: This screen shows the steps in the demand approval process and the status of each step.
+Sections:
+Submit Request: This is the initial submission of the request.
+Cost Commitment Approvals by Finance Policy: The first cost commitment approver reviews and either approves or returns the request.
+Form Change: This indicates any necessary changes or corrections to the form.
+Supply Chain Steps: Subsequent steps handled by the supply chain team.
+Details:
+Process Step: Describes the current step in the process.</li>
+</ol>
+
+<p>Activity: Specific actions taken in each process step.</p>
+
+<p>Owner: Person responsible for the action.</p>
+
+<p>Completion Date: Date when the action was completed.</p>
+
+<p>Status: Current status of the action, such as "Returned" or "Pending".</p>
+
+<p>Days: Number of days taken for the step.</p>
+
+<p>Returned Status: Indicates that the request was returned by the approver for further edits. The requester can make the necessary changes and resubmit.</p>
+
+<p>Pending Status: Indicates that the request is currently awaiting action.</p>
+
+<p>The information provided in this step-by-step guide details the submission, approval, and correction process for a sourcing request. Each step is documented with its purpose, action required, and relevant fields, making it easier to understand the workflow and ensure all necessary information is included for a successful submission.</p>
+
+<h1>34. Detailed Process Breakdown</h1>
+
+<ol>
+<li>Initiation:
+User initiates a request through the chatbot.
+Chatbot asks for initial details such as project name, category, and description.</li>
+<li>Vendor Product Selection:
+Chatbot prompts the user to select vendor products.
+User provides vendor product details.</li>
+<li>Chain IQ Involvement:
+Chatbot asks if Chain IQ will be involved.
+Based on the user's response, additional questions may be asked or certain steps skipped.
+If "No": Chatbot asks for the reason for not involving Chain IQ.
+If "Yes": Chatbot proceeds to ask about the contract manager.</li>
+<li>Cost Commitment Approvers:
+Chatbot requests cost commitment approvers’ details.
+User provides approver details.</li>
+<li>Business/Budget Owner:
+Chatbot asks for details about the business/budget owner.
+User provides the necessary information.
+If "Yes" to outside contract manager's segment: Chatbot asks for the specific business/budget owner.
+If "No": Chatbot proceeds to ask for attachments.</li>
+<li>Attachments:
+Chatbot prompts the user to attach any relevant documents.
+User uploads the documents or provides links.</li>
+<li>Risk Applicability:
+Chatbot guides the user through a series of risk-related questions to determine applicable risk assessments.
+User responds to questions about outsourcing, data handling, intermediary services, etc.</li>
+<li>Review and Submit:
+Chatbot reviews all collected information with the user.
+User confirms and submits the request.</li>
+<li>Exception Handling:
+If the request is returned or a risk assessment fails, the chatbot notifies the user and provides options to correct and resubmit the request.
+User makes the necessary changes based on the feedback and resubmits.
+User Guidance and Edge Case Handling
+Uncertain Responses:</li>
+</ol>
+
+<p>For questions where the user might be unsure, the chatbot offers options to select "I don't know" and provides additional context or instructions.
+Yes/No Decision Points:</p>
+
+<p>Each Yes/No question is followed by tailored prompts to gather additional necessary information or skip irrelevant steps.
+Document Uploads:</p>
+
+<p>If the user has documents to upload, the chatbot guides them through the process and confirms successful uploads.
+Risk Assessments:</p>
+
+<p>The chatbot asks detailed questions about different risk aspects, ensuring all necessary information is captured for each assessment.
+Review and Confirmation:</p>
+
+<p>Before submission, the chatbot provides a summary of all inputs for the user to review and confirm.
+Exception Handling:</p>
+
+<p>In case of exceptions, such as missing information or returned requests, the chatbot clearly communicates the issue, provides instructions for corrections, and allows resubmission.</p>

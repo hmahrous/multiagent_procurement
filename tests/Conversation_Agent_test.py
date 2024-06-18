@@ -104,14 +104,22 @@ class ConversationAgent:
         })
 
     def generate_prompt(self, message):
+        base_prompt = ("You are a Conversation Agent that listens to the user's requests."
+                       "Your Primary Goal is to help the user create a request and gather all the necessary information to process their requests in an efficient and timely manner."
+                       "You are also part of a messaging pool subscribed to the Guardrails-Agent and Procurement-Specialist-Agent."
+                       "Since you are subscribed to them you will be able to receive their messages and the user's as well."
+                       "Your team mates Guardrails-Agent and Procurement-Specialist-Agent will provide you with any assistance you need to be able to know the next steps to take in the conversation to fulfill the request."
+                       "When a message is received you are requied to give a response to the user directly after consulting with Procurement-Specialist-Agent."
+                       "Always ask for assistance for the on next steps to insure the process is being met."
+                       )
         if message["from"] == "user":
-            return f"You are a Conversation Agent. Your role is to gather necessary information from the user to complete a procurement request. You are communicating with a central messaging pool and subscribed to the following agents: Guardrails-Agent and Procurement-Specialist-Agent. The user has asked: {message['content']}. Please guide the user by asking relevant questions to gather all necessary details."
+            return base_prompt + f"\n\nThe user: {message['content']}."
         elif message["from"] == "Procurement-Specialist-Agent":
-            return f"You are a Conversation Agent. Your role is to gather necessary information from the user to complete a procurement request. The Procurement-Specialist-Agent has provided instructions: {message['content']}. Based on these instructions, ask the user the specific details needed to proceed with the procurement. Ensure that you follow up based on the previous user's responses."
+            return base_prompt + f"\n\nThe Procurement-Specialist-Agent has provided instructions: {message['content']}. Based on these instructions, decide the next steps to insure the correct response to the user for example you can ask the user the specific details needed to proceed with the procurement. Ensure that you follow up based on the previous user's responses."
         elif message["from"] == "Guardrails-Agent":
-            return f"You are a Conversation Agent. Your role is to gather necessary information from the user to complete a procurement request. The Guardrails-Agent has validated the user's request and confirmed it is within guidelines. Continue the conversation to gather all necessary details from the user and avoid repeating the same questions."
+            return f"The Guardrails-Agent has validated the user's request and confirmed it is within guidelines. You are required to only act on this message if the user did not follow the guidelines. Gather all necessary details from the user and avoid repeating the same questions."
         else:
-            return "You are a Conversation Agent. Your role is to assist with procurement requests. Please provide instructions or ask clarifying questions to ensure all necessary information is gathered."
+            return base_prompt + "Please provide instructions or ask clarifying questions to ensure all necessary information is gathered."
 
 # Define the ProcurementSpecialistAgent using OpenAI
 class ProcurementSpecialistAgent:
@@ -146,7 +154,11 @@ class ProcurementSpecialistAgent:
         })
 
     def generate_prompt(self, message):
-        return f"You are a Procurement Specialist Agent. Your role is to provide expertise on specific categories and sub-categories and instruct the Conversation-Agent on what information to capture next. The message from the Conversation-Agent is: {message['content']}. Based on this, provide the necessary instructions."
+        return (f"You are a Procurement Specialist Agent. Has at least 20 years of experience in Procurement. You are the main driver of the procument process so pay attention."
+                f"Your role is to provide expertise on specific categories and sub-categories and instruct the Conversation-Agent of what information to capture next to capture the required procument needs."
+                f"The message from the Conversation-Agent is: {message['content']}. Based on this, provide the necessary instructions to help take the next action.",
+                "If the user has not provided enough information, ask the user for the specific details needed to proceed with the procurement."
+                "Instruct the Note-Taker Agent to capture the necessary information as well to keep track of the information state.")
 
 # Define the NoteTakerAgent using OpenAI
 class NoteTakerAgent:
@@ -160,7 +172,7 @@ class NoteTakerAgent:
         self.manager.subscribe(self.name, self.get_subscribed_types())
 
     def get_subscribed_types(self):
-        return ["Conversation-Agent", "Procurement-Specialist-Agent"]
+        return ["user", "Procurement-Specialist-Agent"]
 
     def receive_message(self, message):
         print(f"{self.name} received message: {message}")
@@ -181,7 +193,7 @@ class NoteTakerAgent:
         })
 
     def generate_prompt(self, message):
-        return f"You are a NoteTaker Agent. Your role is to capture and record the required information based on the guidelines provided by the Procurement-Specialist-Agent. The message to be recorded is: {message['content']}. Capture the necessary details and update the state."
+        return f"You are a NoteTaker Agent. Your role is to capture and record the required information based on the guidelines provided by the Procurement-Specialist-Agent. The message to be recorded is: {message['content']}. Capture the necessary details and update the state. Please note you dont need to respond if the message has no additional information value to capture and avoid redundancy."
 
 # Define the GuardrailsAgent using OpenAI
 class GuardrailsAgent:
