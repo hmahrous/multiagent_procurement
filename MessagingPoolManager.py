@@ -57,7 +57,7 @@ class MessagingPoolManager:
                                         "role": "assistant"}
                     elif agent_name == "Note-Take-Agent":
                         message_contents = {"from": (" & ").join([message["from"] for message in messages]), 
-                                        "content": f'your previously captured template from previous messages: {initial_state["required_info_template"]} \n previously captured_info {initial_state["captured_info"]}. \n please only update. \n current message:' + ("\n").join([f'{message["from"]}:{message["content"]}' for message in messages]),
+                                        "content": f'your history conversation: {str(initial_state["messages"])} \n' + f'your previously captured template from previous messages: {initial_state["required_info_template"]} \n previously captured_info {initial_state["captured_info"]}. \n please only update. \n current message:' + ("\n").join([f'{message["from"]}:{message["content"]}' for message in messages]),
                                         "role": "assistant"}
                     else:
                         message_contents = {"from": (" & ").join([message["from"] for message in messages]), 
