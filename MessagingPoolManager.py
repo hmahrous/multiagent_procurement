@@ -145,7 +145,6 @@ class MessagingPoolManager:
             if formatted_response["to"] == "user":
                 initial_state["query_fulfilled"] = True
 
-        # Define classes for each agent and the user
         classes = {
             "Conversation-Agent": "message-conversation-agent",
             "Procurement-Specialist-Agent": "message-procurement-specialist-agent",
@@ -155,6 +154,8 @@ class MessagingPoolManager:
         }
         class_name = classes.get(agent_name, "message-user")
         formatted_message = f'<span class="{class_name}">{agent_name}: {formatted_response["content"]}</span>'
+
+        # Use Chainlit's safe HTML rendering method if available
         await cl.Message(content=formatted_message).send()
 
         self.add_message(formatted_response)
