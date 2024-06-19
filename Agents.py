@@ -1,85 +1,81 @@
-class Agent_MAIN:
-    def __init__(self, name):
-        self.name = name
-        self.manager = None
-        self.processed_instructions = set()
+from typing import List, Dict, Any
+from langchain.agents import AgentExecutor, create_openai_functions_agent
+from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
+from langchain_openai import ChatOpenAI
+from dotenv import find_dotenv, load_dotenv
+from utils import *
+from prompts import system_prompts
+from langchain.schema import StrOutputParser
+from tools import *
 
-    def subscribe_to_manager(self, manager):
-        self.manager = manager
-        self.manager.subscribe(self.name, self.get_subscribed_types())
+load_dotenv(find_dotenv())
 
-    def get_subscribed_types(self):
-        return []
+class AgentMain:
+    def __init__(self, agent):
+        self.agent = agent
 
     def receive_message(self, message):
-        print(f"{self.name} received message: {message}")
-        self.process_message(message)
+        print(f'input: {message}')
+        if isinstance(message, list):
+            response = self.agent.invoke({"messages": message})
+        else:
+            response = self.agent.invoke({"messages": [message]})
+        try:
+            answer = response["output"]
+        except:
+            answer = response
+        print(f'output: {answer}')
+        return answer
 
-    def process_message(self, message):
-        raise NotImplementedError
+class AgentFactory:
+    def __init__(self, llm):
+        self.llm = llm
 
-class ConversationAgentDummy(Agent_MAIN):
-    def __init__(self, name):
-        super().__init__(name)
-        self.questions_asked = False
+    def create_conversation_agent(self):
+        prompt = ChatPromptTemplate.from_messages([
+            ("system", system_prompts["Conversation-Agent"]),
+            MessagesPlaceholder(variable_name="messages"),
+        ])
+        agent_notetaker = prompt | self.llm | StrOutputParser()
+        return AgentMain(agent_notetaker)
 
-    def get_subscribed_types(self):
-        return ["user", "Guardrails-Agent", "Procurement-Specialist-Agent"]
+    def create_procurement_specialist_agent(self):
+        prompt = ChatPromptTemplate.from_messages(
+            [
+                ("system", system_prompts["Procurement-Specialist-Agent"]),
+                MessagesPlaceholder(variable_name="messages"),
+                MessagesPlaceholder(variable_name="agent_scratchpad"),
+            ]
+        )
+        agent = create_openai_functions_agent(self.llm, [knowledge_base_tool], prompt)
+        agent_executor = AgentExecutor(agent=agent, tools=[knowledge_base_tool], verbose=True)
+        return AgentMain(agent_executor)
 
-    def process_message(self, message):
-        if message["from"] == "user" and message["type"] == "query" and not self.questions_asked:
-            self.manager.add_message({
-                "type": "query",
-                "content": "I need to figure out what is the required process. Please advise.",
-                "from": "Conversation-Agent"
-            })
-        elif message["from"] == "Procurement-Specialist-Agent" and message["type"] == "instruction":
-            if message['content'] not in self.processed_instructions and not self.questions_asked:
-                self.manager.add_message({
-                    "type": "query",
-                    "content": "Could you please provide the number of laptops, when was the last time your team changed laptops, RAM requirements, Operating system, and whether this is for a project or a complete replacement?",
-                    "from": "Conversation-Agent"
-                })
-                self.processed_instructions.add(message['content'])
-                self.questions_asked = True
-        elif message["from"] == "Guardrails-Agent" and message["type"] == "validation":
-            print(f"Guardrails validation: {message['content']}")
+    def create_note_take_agent(self):
+        prompt = ChatPromptTemplate.from_messages([
+            ("system", system_prompts["Note-Take-Agent"]),
+            MessagesPlaceholder(variable_name="messages"),
+        ])
+        agent_notetaker = prompt | self.llm | StrOutputParser()
+        return AgentMain(agent_notetaker)
 
-class ProcurementSpecialistAgentDummy(Agent_MAIN):
-    def get_subscribed_types(self):
-        return ["Conversation-Agent"]
+    def create_guardrails_agent(self):
+        prompt = ChatPromptTemplate.from_messages([
+            ("system", system_prompts["Guardrails-Agent"]),
+            MessagesPlaceholder(variable_name="messages"),
+        ])
+        agent_guardrails = prompt | self.llm | StrOutputParser()
+        return AgentMain(agent_guardrails)
 
-    def process_message(self, message):
-        if message["type"] == "query":
-            if "I need to figure out what is the required process" in message["content"]:
-                self.manager.add_message({
-                    "type": "instruction",
-                    "content": "Please ask for these required key specifications: Is this for a new project or ongoing project? Is this a temporary replacement or permanent replacement? How many laptops are needed? How many GB RAM?",
-                    "from": "Procurement-Specialist-Agent"
-                })
-                self.manager.add_message({
-                    "type": "instruction",
-                    "content": "Please take note of this initial set of requirements from the user",
-                    "from": "Procurement-Specialist-Agent"
-                })
+def initialize_agents():
+    llm = ChatOpenAI(model="gpt-4o")
+    factory = AgentFactory(llm)
+    agents = {
+        "Conversation-Agent": factory.create_conversation_agent(),
+        "Procurement-Specialist-Agent": factory.create_procurement_specialist_agent(),
+        "Note-Take-Agent": factory.create_note_take_agent(),
+        "Guardrails-Agent": factory.create_guardrails_agent(),
+    }
+    return agents
 
-class NoteTakerAgentDummy(Agent_MAIN):
-    def get_subscribed_types(self):
-        return ["user", "Procurement-Specialist-Agent"]
-
-    def process_message(self, message):
-        if message["type"] == "instruction" and "Please take note" in message["content"]:
-            print(f"NoteTaker-Agent updating state with message: {message}")
-            # Here you would update the internal state or database
-
-class GuardrailsAgentDummy(Agent_MAIN):
-    def get_subscribed_types(self):
-        return ["user"]
-
-    def process_message(self, message):
-        if message["type"] == "query":
-            self.manager.add_message({
-                "type": "validation",
-                "content": "User request within guidelines.",
-                "from": "Guardrails-Agent"
-            })
+agents = initialize_agents()
