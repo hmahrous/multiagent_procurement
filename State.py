@@ -11,13 +11,13 @@ class AgentState(TypedDict):
     messages: List[Dict[str, Union[str, Dict[str, Union[str, int, bool]]]]]
 
 # Initial state
-initial_state = AgentState(
-    current_speaker="",
-    user_query="",
-    query_fulfilled=False,
-    category=None,
-    sub_category=None,
-    required_info_template=None,
-    captured_info={},
-    messages=[]
-)
+initial_state: AgentState = {
+    "current_speaker": "",
+    "user_query": "",
+    "query_fulfilled": False,
+    "category": None,
+    "sub_category": None,
+    "required_info_template": None,
+    "captured_info": {},
+    "messages": []
+}

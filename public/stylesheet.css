@@ -1,0 +1,20 @@
+/* public/stylesheet.css */
+.message-user {
+    color: lightgray;
+}
+
+.message-conversation-agent {
+    color: blue;
+}
+
+.message-procurement-specialist-agent {
+    color: green;
+}
+
+.message-note-take-agent {
+    color: purple;
+}
+
+.message-guardrails-agent {
+    color: red;
+}

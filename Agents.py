@@ -1,14 +1,12 @@
-from typing import List, Dict, Any, Annotated
+from typing import List, Dict, Any
 from langchain.agents import AgentExecutor, create_openai_functions_agent
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain_openai import ChatOpenAI
-import chainlit as cl
-from langchain.vectorstores.faiss import FAISS
 from dotenv import find_dotenv, load_dotenv
 from utils import *
 from prompts import system_prompts
 from langchain.schema import StrOutputParser
-from tools import*
+from tools import *
 
 load_dotenv(find_dotenv())
 
@@ -17,8 +15,7 @@ class AgentMain:
         self.agent = agent
 
     def receive_message(self, message):
-        # Handle received message
-        print(f'input:{message}')
+        print(f'input: {message}')
         if isinstance(message, list):
             response = self.agent.invoke({"messages": message})
         else:
@@ -27,78 +24,58 @@ class AgentMain:
             answer = response["output"]
         except:
             answer = response
-        print(f"output{answer}")
+        print(f'output: {answer}')
         return answer
 
+class AgentFactory:
+    def __init__(self, llm):
+        self.llm = llm
 
+    def create_conversation_agent(self):
+        prompt = ChatPromptTemplate.from_messages([
+            ("system", system_prompts["Conversation-Agent"]),
+            MessagesPlaceholder(variable_name="messages"),
+        ])
+        agent_notetaker = prompt | self.llm | StrOutputParser()
+        return AgentMain(agent_notetaker)
 
-agents = {}
-llm = ChatOpenAI(model="gpt-4o")
+    def create_procurement_specialist_agent(self):
+        prompt = ChatPromptTemplate.from_messages(
+            [
+                ("system", system_prompts["Procurement-Specialist-Agent"]),
+                MessagesPlaceholder(variable_name="messages"),
+                MessagesPlaceholder(variable_name="agent_scratchpad"),
+            ]
+        )
+        agent = create_openai_functions_agent(self.llm, [knowledge_base_tool], prompt)
+        agent_executor = AgentExecutor(agent=agent, tools=[knowledge_base_tool], verbose=True)
+        return AgentMain(agent_executor)
 
-#create convaersationagent
-prompt = ChatPromptTemplate.from_messages([
-    ("system", system_prompts["Conversation-Agent"]),
-    MessagesPlaceholder(variable_name="messages"),])
-# Create the chain
-agent_notetaker = prompt | llm | StrOutputParser()
-agents["Conversation-Agent"] = AgentMain(agent_notetaker)
+    def create_note_take_agent(self):
+        prompt = ChatPromptTemplate.from_messages([
+            ("system", system_prompts["Note-Take-Agent"]),
+            MessagesPlaceholder(variable_name="messages"),
+        ])
+        agent_notetaker = prompt | self.llm | StrOutputParser()
+        return AgentMain(agent_notetaker)
 
-# Create the agent using the prompt and the tool
-prompt = ChatPromptTemplate.from_messages(
-    [
-        (
-            "system",
-            system_prompts["Procurement-Specialist-Agent"],
-        ),
-        MessagesPlaceholder(variable_name="messages"),
-        MessagesPlaceholder(variable_name="agent_scratchpad"),
-    ]
-)
-agent = create_openai_functions_agent(llm, [knowledge_base_tool], prompt)
-agent_executor = AgentExecutor(agent=agent, tools=[knowledge_base_tool], verbose=True)
-agents["Procurement-Specialist-Agent"] = AgentMain(agent_executor)
+    def create_guardrails_agent(self):
+        prompt = ChatPromptTemplate.from_messages([
+            ("system", system_prompts["Guardrails-Agent"]),
+            MessagesPlaceholder(variable_name="messages"),
+        ])
+        agent_guardrails = prompt | self.llm | StrOutputParser()
+        return AgentMain(agent_guardrails)
 
+def initialize_agents():
+    llm = ChatOpenAI(model="gpt-4o")
+    factory = AgentFactory(llm)
+    agents = {
+        "Conversation-Agent": factory.create_conversation_agent(),
+        "Procurement-Specialist-Agent": factory.create_procurement_specialist_agent(),
+        "Note-Take-Agent": factory.create_note_take_agent(),
+        "Guardrails-Agent": factory.create_guardrails_agent(),
+    }
+    return agents
 
-#create note taker-agent
-prompt = ChatPromptTemplate.from_messages([
-    ("system", system_prompts["Note-Take-Agent"]),
-    MessagesPlaceholder(variable_name="messages"),])
-# Create the chain
-agent_notetaker = prompt | llm | StrOutputParser()
-agents["Note-Take-Agent"] = AgentMain(agent_notetaker)
-
-
-
-#create guardrails-Agent
-prompt = ChatPromptTemplate.from_messages([
-    ("system", system_prompts["Guardrails-Agent"]),
-    MessagesPlaceholder(variable_name="messages"),])
-# Create the chain
-agent_guardrails= prompt | llm | StrOutputParser()
-agents["Guardrails-Agent"] = AgentMain(agent_guardrails)
-
-
-
-
-
-
-
-
-# # Create agents
-
-# for role in roles:
-#     system_prompt = system_prompts[role]
-#     prompt = ChatPromptTemplate.from_messages(
-#         [
-#             ("system", system_prompt),
-#             MessagesPlaceholder(variable_name="messages"),
-#             MessagesPlaceholder(variable_name="agent_scratchpad"),
-#         ]
-#     )
-#     if role == "Procurement-Specialist-Agent":
-#         tools = [knowledge_base_tool]
-#     agent = create_openai_functions_agent(llm, tools, prompt)
-#     agent_e = AgentExecutor(agent=agent, tools=tools)
-#     agents[role] = AgentMain(agent_e)
-#     tools = [dummy_tool]
-
+agents = initialize_agents()
