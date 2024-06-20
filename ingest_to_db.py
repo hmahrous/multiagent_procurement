@@ -36,17 +36,17 @@ def clear_vector_store(directory):
 def ingest_json_vectordb(data, mode: str = 'append') -> Dict[str, str]:
     if mode == 'overwrite':
         clear_vector_store(VECTOR_STORE_DIR)
-    for identifier, content in data.items():
-        result = ingest_new_document_vectordb(identifier, content)
-        print(f"Ingested {identifier}: {result['status']}")
+    for dict_ in data:
+        for identifier, content in dict_.items():
+            result = ingest_new_document_vectordb(identifier, content)
+            print(f"Ingested {identifier}: {result['status']}")
 
 
 if __name__ == "__main__":
-    json_file_path = "json_file.json"
+    json_file_path = "big_software_process_new_request.json"
     mode = 'overwrite'  # Change to 'append' if you want to append instead of overwrite
-    with open(json_file_path, "r") as file:
+    with open(json_file_path, "r", encoding="utf-8") as file:
         data = json.load(file)
-    if not isinstance(data, dict):
-        raise ValueError("The JSON data must be a dictionary with identifiers as keys and content as values.")
+
     result = ingest_json_vectordb(data, mode)
     print(f"Ingestion completed: {result['status']}")
