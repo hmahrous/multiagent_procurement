@@ -64,14 +64,17 @@ class MessagingPoolManager:
         }
         if agent_name in ["Conversation-Agent", "Procurement-Specialist-Agent"]:
             common_content[
-                "content"] = f'your history conversation: {str(initial_state["messages"])} \n current query:' + \
+                "content"] = f'continue from history conversations: ...{str(initial_state["messages"][-3:])} \n previously captured_info {initial_state["captured_info"]} \n current query:' + \
                              "\n".join([f'{message["from"]}:{message["content"]}' for message in messages])
+            
         elif agent_name == "Note-Take-Agent":
-            common_content["content"] = f'your history conversation: {str(initial_state["messages"])} \n' + \
+            common_content["content"] = f'continue from history conversations: ...{str(initial_state["messages"][-3:])} \n' + \
                                         f'your previously captured template from previous messages: {initial_state["required_info_template"]} \n previously captured_info {initial_state["captured_info"]}. \n please only update. \n current message:' + \
                                         "\n".join([f'{message["from"]}:{message["content"]}' for message in messages])
+            
         else:
             common_content["content"] = "\n".join([f'{message["from"]}:{message["content"]}' for message in messages])
+            
         return common_content
 
     async def send_message(self, agent_name: str, message: Dict[str, Any]):
@@ -145,7 +148,6 @@ class MessagingPoolManager:
             if formatted_response["to"] == "user":
                 initial_state["query_fulfilled"] = True
 
-        # Define classes for each agent and the user
         classes = {
             "Conversation-Agent": "message-conversation-agent",
             "Procurement-Specialist-Agent": "message-procurement-specialist-agent",
@@ -155,6 +157,8 @@ class MessagingPoolManager:
         }
         class_name = classes.get(agent_name, "message-user")
         formatted_message = f'<span class="{class_name}">{agent_name}: {formatted_response["content"]}</span>'
+
+        # Use Chainlit's safe HTML rendering method if available
         await cl.Message(content=formatted_message).send()
 
         self.add_message(formatted_response)
