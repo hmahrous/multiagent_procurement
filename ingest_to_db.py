@@ -43,7 +43,7 @@ def ingest_json_vectordb(data, mode: str = 'append') -> Dict[str, str]:
 
 
 if __name__ == "__main__":
-    json_file_path = "big_software_process_new_request.json"
+    json_file_path = "big_software_process_new_request_no_risk.json"
     mode = 'overwrite'  # Change to 'append' if you want to append instead of overwrite
     with open(json_file_path, "r", encoding="utf-8") as file:
         data = json.load(file)
