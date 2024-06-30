@@ -70,12 +70,12 @@ class MessagingPoolManager:
         }
         if agent_name in ["Conversation-Agent", "Procurement-Specialist-Agent"]:
             common_content[
-                "content"] = f'continue from history conversations: ...{str(initial_state["messages"][-3:])} \n previously captured_info {initial_state["captured_info"]} \n current query:' + \
+                "content"] = f'continue from history conversations: ...{str(initial_state["messages"][-5:])} \n previously captured_info {initial_state["captured_info"]} \n current query:' + \
                              "\n".join([f'{message["from"]}:{message["content"]}' for message in messages])
             
         elif agent_name == "Note-Take-Agent":
-            common_content["content"] = f'continue from history conversations: ...{str(initial_state["messages"][-3:])} \n' + \
-                                        f'your previously captured template from previous messages: {initial_state["required_info_template"]} \n previously captured_info {initial_state["captured_info"]}. \n please only update. \n current message:' + \
+            common_content["content"] = f'continue from history conversations: ...{str(initial_state["messages"][-5:])} \n' + \
+                                        f'previously captured json: {initial_state["captured_info"]} \n please only update and return. \n current message:' + \
                                         "\n".join([f'{message["from"]}:{message["content"]}' for message in messages])
             
         else:
@@ -170,7 +170,7 @@ class MessagingPoolManager:
         initial_state["user_query"] = content
         initial_state["messages"].append({"you": query, "user": content})
         self.add_message(message)
-        return await self.process_messages()
+        #return await self.process_messages()
 
     def _get_agent_by_name(self, agent_name: str):
         return self.agents.get(agent_name, None)
@@ -246,11 +246,11 @@ class MessagingPoolManager:
 #         }
 #         if agent_name in ["Conversation-Agent", "Procurement-Specialist-Agent"]:
 #             common_content[
-#                 "content"] = f'continue from history conversations: ...{str(initial_state["messages"][-3:])} \n previously captured_info {initial_state["captured_info"]} \n current query:' + \
+#                 "content"] = f'continue from history conversations: ...{str(initial_state["messages"][-5:])} \n previously captured_info {initial_state["captured_info"]} \n current query:' + \
 #                              "\n".join([f'{message["from"]}:{message["content"]}' for message in messages])
             
 #         elif agent_name == "Note-Take-Agent":
-#             common_content["content"] = f'continue from history conversations: ...{str(initial_state["messages"][-3:])} \n' + \
+#             common_content["content"] = f'continue from history conversations: ...{str(initial_state["messages"][-5:])} \n' + \
 #                                         f'your previously captured template from previous messages: {initial_state["required_info_template"]} \n previously captured_info {initial_state["captured_info"]}. \n please only update. \n current message:' + \
 #                                         "\n".join([f'{message["from"]}:{message["content"]}' for message in messages])
             
