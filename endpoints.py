@@ -101,4 +101,3 @@ def new_session():
 #     session_manager.get_session(session_id)
 #     return {"session_id": session_id}
 
-
