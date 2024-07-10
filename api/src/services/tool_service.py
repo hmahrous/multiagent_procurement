@@ -2,7 +2,20 @@ from typing import Annotated
 from langchain_core.tools import tool
 from langchain.vectorstores.faiss import FAISS
 from src.services.vector_service import vector_store , vector_store_faiss
+import os
+from langchain.embeddings.openai import OpenAIEmbeddings
 
+def get_folder_paths(directory: str) -> list:
+    """
+    Get a list of folder paths within the specified directory.
+    :param directory: The path to the directory.
+    :return: A list of folder paths.
+    """
+    folder_paths = []
+    for root, dirs, files in os.walk(directory):
+        for name in dirs:
+            folder_paths.append(os.path.join(root, name))
+    return folder_paths
 
 @tool
 async def knowledge_base_tool_(
@@ -25,7 +38,7 @@ async def knowledge_base_tool_(
 
 
 @tool
-async def knowledge_base_tool_faiss(
+def knowledge_base_tool_faiss(
     theme: Annotated[str, "The theme of the user's question."] = ''
 ) -> Annotated[str, "Concatenated texts from the similarity search results."]:
     """
@@ -35,23 +48,24 @@ async def knowledge_base_tool_faiss(
     """
     empty_string = ''
     print('knowledge base call')
-    db_paths = vector_store_faiss.get_VECTOR_STORE_DIR()
+    db_paths = get_folder_paths(vector_store_faiss.get_VECTOR_STORE_DIR())
     embeddings_model = vector_store_faiss.get_EMBEDDING_MODEL_NAME()
+    embeddings_model = OpenAIEmbeddings(model=embeddings_model)
     print(f'The length of the paths is: {len(db_paths)}')
     if not db_paths:
         return empty_string
-
     db = None
     for i, db_path in enumerate(db_paths):
         if i == 0:
-            db = await FAISS.load_local(db_path, embeddings_model, allow_dangerous_deserialization=True)
+            db = FAISS.load_local(db_path, embeddings_model, allow_dangerous_deserialization=True)
         else:
-            db_next = await FAISS.load_local(db_path, embeddings_model, allow_dangerous_deserialization=True)
-            await db.amerge_from(db_next)
+            db_next = FAISS.load_local(db_path, embeddings_model, allow_dangerous_deserialization=True)
+            db.merge_from(db_next)
 
     if db is None:
         return empty_string
 
-    docs = await db.asimilarity_search(theme)
+    print(db)
+    docs = db.similarity_search(theme)
     texts = [doc.page_content for doc in docs]
     return "******Knowledge Base RAG output:******\n\n" + '\n'.join(texts)

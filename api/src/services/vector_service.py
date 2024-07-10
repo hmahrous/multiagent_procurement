@@ -56,9 +56,7 @@ class VectorStore_local_faiss:
         self.embeddings_model = OpenAIEmbeddings(model=self.EMBEDDING_MODEL_NAME)
         self.run_json_ingestion(mode="overwrite")
 
-    def _ingest_new_document_vectordb(
-        self, identifier: str, content: str
-    ) -> Dict[str, str]:
+    def _ingest_new_document_vectordb(self, identifier: str, content: str) -> Dict[str, str]:
         """
         Ingest a new document to the vector database.
         :param identifier: The name of the file.
@@ -69,8 +67,14 @@ class VectorStore_local_faiss:
         file_hash = hashlib.sha256(encoded_file_name).hexdigest()
         doc = Document(page_content=content, metadata={"identifier": identifier})
         db = FAISS.from_documents([doc], self.embeddings_model)
-        print(f"Saving to {os.path.join(self.VECTOR_STORE_DIR, file_hash)}")
-        db.save_local(os.path.join(self.VECTOR_STORE_DIR, file_hash))
+        
+        # Ensure the VECTOR_STORE_DIR is an absolute path
+        vector_store_path = os.path.abspath(self.VECTOR_STORE_DIR)
+        print("Current working directory:", os.getcwd())
+        save_path = os.path.join(vector_store_path, file_hash)
+        print(f"Saving to {save_path}")
+        
+        db.save_local(save_path)
         return {"status": "success"}
 
     def _clear_vector_store(self, directory):
