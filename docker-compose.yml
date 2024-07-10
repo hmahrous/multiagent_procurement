@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+  api:
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+    working_dir: /api
+    ports:
+      - "8080:8080"
+    restart: on-failure:5
+    env_file:
+      - api/.env
+    environment:
+      - PYTHONPATH=/api/src

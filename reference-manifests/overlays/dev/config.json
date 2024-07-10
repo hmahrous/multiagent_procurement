@@ -1,0 +1,7 @@
+{
+    "image_updater": {
+        "container_registry": "acrplatolaueup1",
+        "backend_image_name": "plato-ubs-sc-genai",
+        "default_backend_image_name": "plato-ubs-sc-genai"
+    }
+}

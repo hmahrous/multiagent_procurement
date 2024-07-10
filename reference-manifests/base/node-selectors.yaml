@@ -1,0 +1,9 @@
+apiVersion: apps/v1
+kind: "*"
+metadata:
+  name: "*"
+spec:
+  template:
+    spec:
+      nodeSelector:
+        kubernetes.azure.com/mode: user

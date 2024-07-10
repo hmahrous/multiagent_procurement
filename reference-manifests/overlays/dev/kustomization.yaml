@@ -1,0 +1,15 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - ../../base
+#  - secret-provider-class.yaml
+
+images:
+  - name: plato-ubs-sc-genai
+    newName: acrplatolaueup1.azurecr.io/plato-ubs-sc-genai
+    newTag: IMAGE_TAG # Will be substituted by the build pipeline
+
+patches:
+  # - path: frontend-env-vars.yaml
+  - path: backend-env-vars.yaml

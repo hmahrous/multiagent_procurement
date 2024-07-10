@@ -1,0 +1,71 @@
+[tool.poetry]
+authors = [
+    "Lanyi, David <David.Lanyi@bain.com>",
+    "Abdelrashied, Mostafa <Mostafa.Abdelrashied@Bain.com>",
+    "Hecht, Axel <Axel.Hecht@Bain.com>",
+    "Schinnerl, Luca <Luca.Schinnerl@bain.com>",
+    "Mahrous, Hesham <hesham.mahrous@bain.com>"
+]
+description = "Backend for the UBS GenAI project generated using FastAPI and PostgreSQL"
+name = "d5ym-backend"
+version = "0.0.1-alpha"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+uvicorn = "^0.21.1"  # Ensure uvicorn is added
+alembic = "^1.13.1"
+asyncpg = "^0.29.0"
+fastapi = "^0.110.1"
+pydantic = { extras = ["dotenv", "email"], version = "^2.6.4" }
+pydantic-settings = "^2.2.1"
+sqlalchemy = "^2.0.29"
+openai = "^1.16.2"
+jinja2 = "^3.1.3"
+gevent = "^24.2.1"
+langchain = "^0.1.15"
+langchain-community = "^0.0.32"
+langchain-openai = "^0.1.2"
+psycopg2-binary = "^2.9.9"
+faiss-cpu  ="1.8.0.post1"
+pgvector = "^0.2.5"
+streamlit = "^1.36.0"
+
+[tool.poetry.group.dev.dependencies]
+coverage = "^7.4.4"
+freezegun = "^1.4.0"
+httpx = "^0.27.0"
+mypy = "^1.9.0"
+pre-commit = "^3.7.0"
+pytest = "^8.1.1"
+# do not bump pytest-asyncio until https://github.com/pytest-dev/pytest-asyncio/issues/706 resolved
+pytest-asyncio = "0.21.1"
+pytest-cov = "^5.0.0"
+pytest-xdist = "^3.5.0"
+ruff = "^0.3.5"
+types-passlib = "^1.7.7.20240327"
+
+[build-system]
+build-backend = "poetry.core.masonry.api"
+requires = ["poetry-core>=1.0.0"]
+
+[tool.pytest.ini_options]
+addopts = "-vv -n auto --cov --cov-report xml --cov-report term-missing --cov-fail-under=100"
+asyncio_mode = "auto"
+testpaths = ["src/tests"]
+
+[tool.coverage.run]
+concurrency = ["gevent"]
+omit = ["src/tests/*"]
+source = ["src"]
+
+[tool.mypy]
+python_version = "3.12"
+strict = true
+
+[tool.ruff]
+target-version = "py312"
+
+[tool.ruff.lint]
+# pycodestyle, pyflakes, isort, pylint, pyupgrade
+ignore = ["E501"]
+select = ["E", "F", "I", "PL", "UP", "W"]

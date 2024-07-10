@@ -1,0 +1,36 @@
+# For local development
+# docker compose up
+# use -d for daemon mode
+
+services:
+  api:
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+    working_dir: /api
+    ports:
+      - "8080:8080"
+    restart: on-failure:5
+    depends_on:
+      - postgres_db
+    env_file:
+      - api/.env
+    volumes:
+      - ./api:/api
+      - type: bind
+        source: ./api
+        target: /api
+
+  postgres_db:
+    restart: unless-stopped
+    image: pgvector/pgvector:pg16
+    volumes:
+      - postgres_db:/var/lib/postgresql/data
+    env_file:
+      - ./api/.env
+      - ./api/.env.pg
+    ports:
+      - "5432:5432"
+
+volumes:
+  postgres_db:

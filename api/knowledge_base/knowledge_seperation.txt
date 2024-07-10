@@ -1,0 +1,80 @@
+### Processes
+1. **Changes to Existing Contracts** (1)
+   - **Title**: Initiate a Sourcing Request
+   - **Details**: Users are prompted to indicate if they want to make changes to an existing contract, select the contract, and provide additional information such as contract status and contact support if needed.
+
+11. **Chain IQ Involvement** (11)
+    - **Title**: Chain IQ Involvement
+    - **Details**: Users confirm Chain IQ involvement in the process, with options to specify reasons for not involving Chain IQ and additional fields for different contract managers and cost commitment approvers.
+
+12. **Cost Commitment Approvers** (12)
+    - **Title**: Confirm/Change the Cost Commitment Approvers
+    - **Details**: Instructions to confirm or change approvers defaulted to the contract manager’s reporting line. Fields for approvers are pre-filtered for required seniority.
+
+13. **Business/Budget Owner** (13)
+    - **Title**: Business/Budget Owner outside the Contract Manager’s Segment
+    - **Details**: Users specify the business/budget owner’s division, area, unit, sector, and segment, with an option to add relevant attachments.
+
+14. **Attachments** (14)
+    - **Title**: Attachments
+    - **Details**: Users provide supporting documents for the request, adding descriptions and uploading files.
+
+31. **Overview - Approval Process** (31)
+    - **Title**: Overview - Approval Process
+    - **Details**: Provides a comprehensive overview of the approval process, detailing each step, responsible owner, status, and completion dates. It includes demand approval, cost commitment approvals, contracting, risk assessments, and final contract reviews.
+
+32. **Approver Process Summary** (32)
+    - **Title**: Approver Process Summary
+    - **Details**: A detailed summary of the approver process, outlining the steps and roles involved in reviewing and approving sourcing requests. It includes submission, cost commitment approvals, contracting, risk assessments, final contract reviews, and final submission and approval.
+
+33. **Summary of All Steps** (33)
+    - **Title**: Summary of All Steps
+    - **Details**: Lists all steps in the sourcing request process, including initiation, description, category selection, financials, integration budget, application directory, vendor products, Chain IQ involvement, cost commitment approvers, business/budget owner, and attachments.
+
+34. **Detailed Process Breakdown** (34)
+
+### Field Explanations
+2. **Initiative Description** (2)
+   - **Title**: Initiative Description
+   - **Details**: Fields include a descriptive title, objectives and deliverables, type of contract, and type of cost. Users must follow the UBS Naming Convention and provide detailed information to assist ChainIQ and for reports.
+
+3. **Type of Good or Service (Category)** (3)
+   - **Title**: What is the type of Good or Service?
+   - **Details**: Users select the appropriate category, provide expected amount, start and end date, and ensure correct allocation by calendar year.
+
+4. **Type of Good or Service (Category)** (4)
+   - **Title**: What is the type of Good or Service?
+   - **Details**: Similar to field 3, it involves selecting categories, specifying financial details, confirming category selection, and additional financial information.
+
+5. **Deal Financials and Duration** (5)
+   - **Title**: Deal Financials and Duration
+   - **Details**: Fields include the deal presenter, start and end date, expected amount, funding type, cost center, and GCRS company. It also includes allocation by calendar year.
+
+6. **Cost Breakdown** (6)
+   - **Title**: Cost Breakdown
+   - **Details**: Users provide a breakdown of costs, select spend types, insert delivery dates, and add costs. The breakdown appears in a table format.
+
+7. **Integration Budget** (7)
+   - **Title**: Is the spend funded out of the integration budget?
+   - **Details**: Users answer if the spend is from the integration budget and provide additional information for the Global Software Asset Management (GSAM) Team.
+
+
+### Application Directory and Vendor Products
+8. **AppDir: Application, UBS Products, and Vendor Products** (8)
+   - **Title**: AppDir: Application, UBS Products, and Vendor Products
+   - **Details**: Users indicate if they know the software being purchased and register it in the Application directory, providing the application and product ID.
+
+9. **AppDir: Application, UBS Products, and Vendor Products** (9)
+   - **Title**: AppDir: Application, UBS Products, and Vendor Products
+   - **Details**: Similar to field 8, it involves selecting the application, checking product permits, and adding them to the table.
+
+10. **Vendor Products** (10)
+    - **Title**: AppDir: Application, UBS Products, and Vendor Products
+    - **Details**: Users select vendor products, which are then added to a table with categories, IT capabilities, vendor, product, and standard status.
+
+### Risk Assessment
+15-30
+
+
+- Big RAG (postgres, azure...) and filter indices
+- FAISS

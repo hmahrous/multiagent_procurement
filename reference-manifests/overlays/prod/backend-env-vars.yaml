@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: plato-ubs-sc-genai
+spec:
+  template:
+    spec:
+      containers:
+        - name: plato-ubs-sc-genai
+          env:
+          - name: OPEN_AI_CONFIG__OPENAI_API_KEY
+            valueFrom:
+              secretKeyRef:
+                name: plato-apps-secret
+                key: openai-api-key
+          - name: OPENAI_API_ORG
+            value: "org-WHkJBzUDqCQRefnnsfhWp3jb"
+          - name: environment
+            value: production
+          - name: GITHUB_ACCESS_TOKEN
+            valueFrom:
+              secretKeyRef:
+                name: plato-apps-secret
+                key: github-issues-token
+          - name: DATABASE__USERNAME
+            value: "plato"
+          - name: DATABASE__PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: plato-apps-secret
+                key: postgres-secret
+          - name: DATABASE__DB
+            value: "plato-ubs-sc-genai-db"
+          - name: DATABASE__PORT
+            value: "5432"
+          - name: DATABASE__HOSTNAME
+            value: "platodb.postgres.database.azure.com"
+          - name: DATABASE__DEFAULT_DB
+            value: "postgres"
+          - name: APP_CONFIG__APP_ROOT
+            value: "/plato-ubs-sc-genai"
