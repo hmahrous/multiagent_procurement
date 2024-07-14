@@ -44,7 +44,7 @@ def get_response(prompt, session_id, mode):
     }
     response = requests.post(url, json=data)
     if response.status_code == 200:
-        response = response.json()
+        response = response.json()["response"]
         print(response)
         if isinstance(response, list):
             for res in response:

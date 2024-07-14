@@ -1,17 +1,20 @@
-from langchain.schema import StrOutputParser
-from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
-from langchain.agents import AgentExecutor, create_openai_functions_agent
-from langchain_openai import ChatOpenAI
-from langchain_core.output_parsers import JsonOutputParser
-from src.core.config import get_settings
-from src.services.prompt_service import SystemPrompts
-from src.models.state import initial_state
-from src.services.tool_service import knowledge_base_tool_faiss as knowledge_base_tool
 import asyncio
-import logging
 import json
+import logging
+
+from langchain.agents import AgentExecutor, create_openai_functions_agent
+from langchain.schema import StrOutputParser
+from langchain_core.output_parsers import JsonOutputParser
+from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
+from langchain_openai import ChatOpenAI
+from src.core.config import get_settings
+from src.models.state import initial_state
+from src.services.prompt_service import SystemPrompts
+from src.services.tool_service import tool_runner #, knowledge_base_tool_
 
 logging.basicConfig(level=logging.INFO)
+#tool_runnable = knowledge_base_tool_()
+
 class AgentMain:
     def __init__(self, name, agent, prompt_formatter=None):
         self.name = name
@@ -30,18 +33,30 @@ class AgentMain:
                 if isinstance(messages, dict):
                     messages = [messages]
             except json.JSONDecodeError:
-                raise ValueError("Invalid message format: expected a list of dictionaries or a JSON string.")
+                raise ValueError(
+                    "Invalid message format: expected a list of dictionaries or a JSON string."
+                )
 
         for message in messages:
-            if not isinstance(message, dict) or "from" not in message or "content" not in message:
-                raise ValueError("Each message must be a dictionary with 'from' and 'content' keys.")
+            if (
+                not isinstance(message, dict)
+                or "from" not in message
+                or "content" not in message
+            ):
+                raise ValueError(
+                    "Each message must be a dictionary with 'from' and 'content' keys."
+                )
 
         common_content = {
             "from": (" & ").join([message["from"] for message in messages]),
             "role": "assistant",
-            "content": self.prompt_formatter(messages) if self.prompt_formatter else "\n".join(
-                [f'{message["from"]}:{message["content"]}' for message in messages]
-            )
+            "content": (
+                self.prompt_formatter(messages)
+                if self.prompt_formatter
+                else "\n".join(
+                    [f'{message["from"]}:{message["content"]}' for message in messages]
+                )
+            ),
         }
 
         # Ensure the input includes all expected keys
@@ -55,6 +70,7 @@ class AgentMain:
         logging.info(f"Response from {self.name}: {answer}")
         return answer
 
+
 class AgentFactory:
     def __init__(self, llm):
         self.llm = llm
@@ -66,24 +82,6 @@ class AgentFactory:
         }
 
     def create_conversation_agent(self):
-        def _conversation_prompt_formatter(messages):
-            completel_dict = initial_state["captured_info"]
-            empty_fields = []
-            for outer_key, outer_value in completel_dict.items():
-                if isinstance(outer_value, dict):
-                    for inner_key, inner_value in outer_value.items():
-                        if not inner_value:
-                            empty_fields.append(f"{outer_key} -> {inner_key}")
-                elif not outer_value:
-                    empty_fields.append(f"{outer_key}")
-            formatted_message = (
-                f'continue from history conversations: ...{str(initial_state["messages"][-3:])} \n the following fields still need input from the user: {empty_fields}. Ask the user input for these fields one by one until it is filled completely. If the user asks for clarification, contact the Procurement-Agent to fetch answers. If there are no unfilled fields or more clarification questions, thank the user and ask for confirmation to submit the request.\n current query:'
-                + "\n".join(
-                    [f'{message["from"]}:{message["content"]}' for message in messages]
-                )
-            )
-            return formatted_message
-
         prompt = ChatPromptTemplate.from_messages(
             [
                 ("system", self.system_prompts["Conversation-Agent"]),
@@ -91,18 +89,9 @@ class AgentFactory:
             ]
         )
         agent_notetaker = prompt | self.llm | StrOutputParser()
-        return AgentMain("Conversation-Agent",agent_notetaker, prompt_formatter=None)
+        return AgentMain("Conversation-Agent", agent_notetaker, prompt_formatter=None)
 
     def create_procurement_specialist_agent(self):
-        def _specialist_prompt_formatter(messages):
-            formatted_message = (
-                f'continue from history conversations: ...{str(initial_state["messages"][-3:])} \n current query:'
-                + "\n".join(
-                    [f'{message["from"]}:{message["content"]}' for message in messages]
-                )
-            )
-            return formatted_message
-
         prompt = ChatPromptTemplate.from_messages(
             [
                 ("system", self.system_prompts["Procurement-Specialist-Agent"]),
@@ -110,9 +99,13 @@ class AgentFactory:
                 MessagesPlaceholder(variable_name="agent_scratchpad"),
             ]
         )
-        agent = create_openai_functions_agent(self.llm, [knowledge_base_tool], prompt)
-        agent_procurement = AgentExecutor(agent=agent, tools=[knowledge_base_tool], verbose=True)
-        return AgentMain("Procurement-Specialist-Agent", agent_procurement, prompt_formatter=None)
+        agent = create_openai_functions_agent(self.llm, [tool_runner], prompt)
+        agent_procurement = AgentExecutor(
+            agent=agent, tools=[tool_runner], verbose=True
+        )
+        return AgentMain(
+            "Procurement-Specialist-Agent", agent_procurement, prompt_formatter=None
+        )
 
     def create_note_take_agent(self):
         def _note_taking_prompt_formatter(messages):
@@ -149,6 +142,7 @@ class AgentFactory:
         )
         agent_guardrails = prompt | self.llm | StrOutputParser()
         return AgentMain("Guardrails-Agent", agent_guardrails, prompt_formatter=None)
+
 
 def initialize_agents():
     llm = ChatOpenAI(model="gpt-4o")

@@ -18,7 +18,7 @@ class MessagingPoolManager:
         # Subscribe agents to specific senders
         self.subscribe("Conversation-Agent", ["user", "Procurement-Specialist-Agent"])
         self.subscribe("Procurement-Specialist-Agent", ["Conversation-Agent"])
-        self.subscribe("Note-Take-Agent", ["user", "Procurement-Specialist-Agent"])
+        self.subscribe("Note-Take-Agent", ["user"])
         self.subscribe("Guardrails-Agent", ["user"])
 
     def add_message(self, message: Dict[str, Any]):
