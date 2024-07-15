@@ -7,7 +7,6 @@ import shutil
 import os
 from src.api.endpoints import SessionManager
 from src.schemas.requests import ChatInput, ModeInput, idInput
-from src.models.state import initial_state
 from src.scripts.helpers import ingest_new_document_vectordb, get_ingested_filenames, delete_file_vectordb
 from src.rag.app.book import chunk
 from uuid import uuid4
@@ -27,10 +26,9 @@ async def chat_with_gpt(input_data: ChatInput, session_id: idInput, mode: ModeIn
     logging.info(f"Received input_data: {input_data}")
     logging.info(f"Received session_id: {session_id}")
     logging.info(f"Received mode: {mode}")
-
     custom_agent = session_manager.get_session(session_id.id_)
     await custom_agent.add_user_message("", f"""{input_data.message}""")
-    response = await custom_agent.process_messages(mode=mode.mode)
+    response, initial_state = await custom_agent.process_messages(mode=mode.mode)
 
     return JSONResponse(content={"response": response, "schema_": initial_state})
 
@@ -51,7 +49,6 @@ async def ingest_document(file: UploadFile = File(...)):
         # Save the uploaded file to the temporary location
         with open(temp_file_path, "wb") as buffer:
             shutil.copyfileobj(file.file, buffer)
-        
         # Process the file based on its extension
         if file.filename.endswith(".pdf"):
             chunks = chunk(temp_file_path, lang="English", callback=dummy)

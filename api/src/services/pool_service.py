@@ -2,6 +2,7 @@ import json
 import logging
 from typing import Any, Dict, List
 from src.models.state import initial_state
+import copy
 
 #logging.basicConfig(level=logging.INFO)
 
@@ -12,6 +13,7 @@ class MessagingPoolManager:
         self.processed_messages: Dict[str, List[str]] = {}
         self.msg_id_counter = 1
         self.agents = agents
+        self.initial_state = copy.deepcopy(initial_state)
         self._initialize_subscriptions()
 
     def _initialize_subscriptions(self):
@@ -60,7 +62,7 @@ class MessagingPoolManager:
                         results.append(response)
                         if 'to' in response:
                             if response['to'] == 'user':
-                                return results if mode == 'group' else response
+                                return [results, self.initial_state] if mode == 'group' else [response, self.initial_state]
 
     async def _handle_messages(self, agent_name, messages, mode):
         message_contents = self._prepare_message_contents(agent_name, messages)
@@ -75,13 +77,13 @@ class MessagingPoolManager:
         }
         if agent_name in ["Conversation-Agent", "Procurement-Specialist-Agent"]:
             common_content[
-                "content"] = f'continue from history conversations: ...{str(initial_state["messages"][-5:])} \n previously captured_info {initial_state["captured_info"]} \n current query:' + \
+                "content"] = f'continue from history conversations: ...{str(self.initial_state["messages"][-5:])} \n previously captured_info {self.initial_state["captured_info"]} \n current query:' + \
                              "\n".join([f'{message["from"]}:{message["content"]}' for message in messages])
 
         elif agent_name == "Note-Take-Agent":
             common_content[
-                "content"] = f'continue from history conversations: ...{str(initial_state["messages"][-5:])} \n' + \
-                             f'previously captured json: {initial_state["captured_info"]} \n please only update and return. \n current message:' + \
+                "content"] = f'continue from history conversations: ...{str(self.initial_state["messages"][-5:])} \n' + \
+                             f'previously captured json: {self.initial_state["captured_info"]} \n please only update and return full json. \n current message:' + \
                              "\n".join([f'{message["from"]}:{message["content"]}' for message in messages])
 
         else:
@@ -93,7 +95,7 @@ class MessagingPoolManager:
     async def send_message(self, agent_name: str, message: Dict[str, Any]):
         agent = self._get_agent_by_name(agent_name)
         if agent:
-            initial_state["current_speaker"] = agent_name
+            self.initial_state["current_speaker"] = agent_name
             response = await agent.receive_message(message)  # Ensure await here
             if response:
                 formatted_response = self._format_response(agent_name, response)
@@ -153,17 +155,16 @@ class MessagingPoolManager:
         """
         if agent_name == "Note-Take-Agent":
             if formatted_response["type"] == "template":
-                initial_state["required_info_template"] = formatted_response["content"]
+                self.initial_state["required_info_template"] = formatted_response["content"]
             if formatted_response["type"] == "state_update":
-                initial_state["captured_info"] = formatted_response["content"]
+                self.initial_state["captured_info"] = formatted_response["content"]
         if agent_name == "Conversation-Agent":
             if formatted_response["to"] == "user":
-                initial_state["query_fulfilled"] = True
-
+                self.initial_state["query_fulfilled"] = True
         self.add_message(formatted_response)
 
     async def prompt_user_input(self, message: Dict[str, Any] = None):
-        initial_state["current_speaker"] = "user"
+        self.initial_state["current_speaker"] = "user"
         user_input = input(f"{message['content']}")
         await self.add_user_message(message['content'], user_input)
 
@@ -174,11 +175,12 @@ class MessagingPoolManager:
             "role": "user",
             "to": "Conversation-Agent"
         }
-        initial_state["user_query"] = content
-        initial_state["messages"].append({"you": query, "user": content})
+        self.initial_state["user_query"] = content
+        self.initial_state["messages"].append({"you": query, "user": content})
         self.add_message(message)
         #logging.info(f"Added user message: {message}")
         # return await self.process_messages()
 
     def _get_agent_by_name(self, agent_name: str):
         return self.agents.get(agent_name, None)
+
