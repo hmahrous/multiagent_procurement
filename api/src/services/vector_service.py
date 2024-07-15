@@ -27,9 +27,12 @@ from src.schemas.responses import StoreChunksOutput
 
 load_dotenv(find_dotenv())
 
-HASH_MAPPING_FILE = "hash_mapping.json"
+#HASH_MAPPING_FILE = "hash_mapping.json"
 EMBEDDING_MODEL_NAME = "text-embedding-3-large"
-VECTOR_STORE_DIR = "knowledge_base/local_faiss_vector_store/"
+#VECTOR_STORE_DIR = "knowledge_base/local_faiss_vector_store/"
+VECTOR_STORE_DIR = "/api/knowledge_base/vector_store"
+HASH_MAPPING_FILE = "/api/knowledge_base/hash_mapping.json"
+
 EMBEDDING = OpenAIEmbeddings(model=EMBEDDING_MODEL_NAME)
 NUMBER_OF_CHUNKS_CONSIDERED = 5
 MINIMUM_RELEVANCE_SCORE = 0.8
