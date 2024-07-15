@@ -27,8 +27,13 @@ from src.schemas.responses import StoreChunksOutput
 
 load_dotenv(find_dotenv())
 
+#HASH_MAPPING_FILE = "hash_mapping.json"
+EMBEDDING_MODEL_NAME = "text-embedding-3-large"
+#VECTOR_STORE_DIR = "knowledge_base/local_faiss_vector_store/"
+VECTOR_STORE_DIR = "/api/knowledge_base/vector_store"
+HASH_MAPPING_FILE = "/api/knowledge_base/hash_mapping.json"
 
-EMBEDDING = OpenAIEmbeddings()
+EMBEDDING = OpenAIEmbeddings(model=EMBEDDING_MODEL_NAME)
 NUMBER_OF_CHUNKS_CONSIDERED = 5
 MINIMUM_RELEVANCE_SCORE = 0.8
 POSTGRES_COLLECTION_NAME = "test_vector_table"
@@ -54,7 +59,7 @@ class VectorStore_local_faiss:
         if not os.path.exists(self.VECTOR_STORE_DIR):
             os.makedirs(self.VECTOR_STORE_DIR)
         self.embeddings_model = OpenAIEmbeddings(model=self.EMBEDDING_MODEL_NAME)
-        self.run_json_ingestion(mode="overwrite")
+        #self.run_json_ingestion(mode="overwrite")
 
     def _ingest_new_document_vectordb(self, identifier: str, content: str) -> Dict[str, str]:
         """
@@ -67,13 +72,13 @@ class VectorStore_local_faiss:
         file_hash = hashlib.sha256(encoded_file_name).hexdigest()
         doc = Document(page_content=content, metadata={"identifier": identifier})
         db = FAISS.from_documents([doc], self.embeddings_model)
-        
+
         # Ensure the VECTOR_STORE_DIR is an absolute path
         vector_store_path = os.path.abspath(self.VECTOR_STORE_DIR)
         print("Current working directory:", os.getcwd())
         save_path = os.path.join(vector_store_path, file_hash)
         print(f"Saving to {save_path}")
-        
+
         db.save_local(save_path)
         return {"status": "success"}
 
@@ -138,7 +143,7 @@ class VectorStore_postgres:
         return {"chunks": result}
 
     async def store_chunks(
-        self, texts: List[str], metadata: List[MetaData]
+            self, texts: List[str], metadata: List[MetaData]
     ) -> StoreChunksOutput:
         """
         Store chunks to vector store.

@@ -1,0 +1,79 @@
+{
+  "1. Initiating a Sourcing Request": {
+    "New Request": "yes",
+    "Title": "Procurement of SAP Hana Licenses for CRM Department 2024",
+    "Detailed description": {
+      "Business need": "Our new CRM department requires SAP Hana licenses to efficiently manage customer data and improve customer interactions.",
+      "Project scope": "The project involves implementing SAP Hana across the CRM department, training staff, and integrating it with existing systems.",
+      "Expected deliverables": "100 SAP Hana licenses, implementation support, and training.",
+      "Impact if not approved": "Without these licenses, the CRM department will face operational inefficiencies, impacting customer satisfaction.",
+      "Type of contract": "Subscription",
+      "Cost": "$80,000"
+    }
+  },
+  "2. Category Selection and Financial Details": {
+    "Category": "Business Applications",
+    "Start Date": "June 1, 2024",
+    "End Date": "July 31, 2024",
+    "Expected Amount": "$80,000"
+  },
+  "3. Deal Financials and Duration": {
+    "Deal Presenter": "Hesham Mahrous",
+    "Available Funds": "$100,000, CB40 - UBS BSA (CH Ops) - Zurich.",
+    "Funding Type": "Operational Budget",
+    "Cost Center": "Fx000123",
+    "GCRS Company Details": ""
+  },
+  "4. Cost Breakdown": {
+    "Cost Breakdown": [
+      {
+        "Spend Type": "Software Licenses",
+        "Expected Delivery Date": "June 1, 2024",
+        "Cost": "$70,000"
+      },
+      {
+        "Spend Type": "Implementation Services",
+        "Expected Delivery Date": "Dec 31, 2024",
+        "Cost": "$10,000"
+      }
+    ]
+  },
+  "5. Integration Budget and Technology Replacement": {
+    "Integration Budget": "Yes",
+    "Replacing Technology": "Yes",
+    "Details": "Replacing legacy CRM system",
+    "Decommissioning Timeline": "December 31, 2024"
+  },
+  "6. Software Purchase": {
+    "Purchasing Software": "Yes",
+    "Software Known": "Yes, SAP Hana"
+  },
+  "7. Vendor Products": {
+    "Vendor Products": [
+      {
+        "Category": "Business Applications",
+        "IT Capabilities": "Supply Chain Management",
+        "Vendor": "SAP",
+        "Vendor Product": "SAP Hana",
+        "Standard Status": "Approved",
+        "Action": "Purchase"
+      }
+    ]
+  },
+  "8. Chain IQ Involvement": {
+    "Chain IQ Involvement": "Not specified"
+  },
+  "9. Cost Commitment Approvers": {
+    "Cost Commitment Approver 1": "Ludovica Lardera (43501188)",
+    "Cost Commitment Approver 2": "Harald Egger (00101069)"
+  },
+  "10. Business/Budget Owner Specification": {
+    "Business/Budget Owner Details": {
+      "Division": "Finance",
+      "Area": "Budgeting",
+      "Unit": "Corporate Finance",
+      "Sector": "Financial Planning",
+      "Segment": "Operational Efficiency"
+    }
+  }
+}

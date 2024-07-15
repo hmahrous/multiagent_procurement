@@ -10,6 +10,7 @@ import logging
 
 from api.src.schemas.requests import MetaData
 from api.src.services.vector_service import vector_store_faiss as vector_store
+from elasticsearch import Elasticsearch
 
 
 async def main():
@@ -31,7 +32,6 @@ async def main():
             logging.info(f"Stored chunk with identifier {meta_data}")
         except Exception as e:
             logging.error(f"Error storing chunk with identifier {meta_data}: {e}")
-
 
 if __name__ == "__main__":
     asyncio.run(main())
