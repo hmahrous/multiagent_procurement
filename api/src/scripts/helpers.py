@@ -17,6 +17,7 @@ import asyncio
 from langchain_openai import ChatOpenAI
 from langchain.vectorstores import FAISS, DistanceStrategy
 from src.services.vector_service import EMBEDDING_MODEL_NAME, VECTOR_STORE_DIR, HASH_MAPPING_FILE
+import shutil
 
 distance_strategy=DistanceStrategy.MAX_INNER_PRODUCT
 embeddings_model = OpenAIEmbeddings(model=EMBEDDING_MODEL_NAME)
@@ -118,13 +119,18 @@ def delete_file_vectordb(filename):
         
         if filename in hash_to_filename_mapping:
             file_hash = hash_to_filename_mapping[filename]
-            os.remove(os.path.join(VECTOR_STORE_DIR, file_hash))
-            del hash_to_filename_mapping[filename]
-            
-            with open(HASH_MAPPING_FILE, "w", encoding='utf-8') as f:
-                json.dump(hash_to_filename_mapping, f, ensure_ascii=False)
-            
-            return {'status': 'success'}
+            dir_path = os.path.join(VECTOR_STORE_DIR, file_hash)
+
+            if os.path.isdir(dir_path):
+                shutil.rmtree(dir_path)
+                del hash_to_filename_mapping[filename]
+
+                with open(HASH_MAPPING_FILE, "w", encoding='utf-8') as f:
+                    json.dump(hash_to_filename_mapping, f, ensure_ascii=False)
+
+                return {'status': 'success'}
+            else:
+                return {'status': 'not a directory'}
         else:
             return {'status': 'filename not found'}
     else:
