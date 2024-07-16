@@ -8,7 +8,7 @@ import os
 from src.api.endpoints import SessionManager
 from src.schemas.requests import ChatInput, ModeInput, idInput
 from src.scripts.helpers import ingest_new_document_vectordb, get_ingested_filenames, delete_file_vectordb
-from src.rag.app.book import chunk
+from langchain_community.document_loaders import PyPDFLoader
 from uuid import uuid4
 import json
 
@@ -51,9 +51,12 @@ async def ingest_document(file: UploadFile = File(...)):
             shutil.copyfileobj(file.file, buffer)
         # Process the file based on its extension
         if file.filename.endswith(".pdf"):
-            chunks = chunk(temp_file_path, lang="English", callback=dummy)
-        elif file.filename.endswith(".docx"):
-            chunks = chunk(temp_file_path, lang="English", callback=dummy)
+            loader = PyPDFLoader(temp_file_path)
+            chunks = loader.load_and_split()
+            print(f'length of chunks is {len(chunks)}')
+            chunks = [{"content_with_weight": str(page.page_content)} for page in chunks]
+            print(f'sample chunk is {chunks[0]}')
+            #chunks = chunk(temp_file_path, lang="English", callback=dummy)
         elif file.filename.endswith(".json"):
             with open(temp_file_path, "r", encoding="utf-8") as f:
                 data = json.load(f)

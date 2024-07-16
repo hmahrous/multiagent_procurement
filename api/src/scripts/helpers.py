@@ -15,7 +15,7 @@ from langchain.prompts.chat import (
 )
 import asyncio
 from langchain_openai import ChatOpenAI
-from langchain.vectorstores import FAISS, DistanceStrategy
+from langchain_community.vectorstores import FAISS, DistanceStrategy
 from src.services.vector_service import EMBEDDING_MODEL_NAME, VECTOR_STORE_DIR, HASH_MAPPING_FILE
 import shutil
 
