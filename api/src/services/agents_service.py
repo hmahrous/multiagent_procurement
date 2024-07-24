@@ -1,16 +1,14 @@
 import asyncio
 import json
 import logging
-
 from langchain.agents import AgentExecutor, create_openai_functions_agent
 from langchain.schema import StrOutputParser
 from langchain_core.output_parsers import JsonOutputParser
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
-from langchain_openai import ChatOpenAI
-from src.core.config import get_settings
 from src.models.state import initial_state
 from src.services.prompt_service import SystemPrompts
-from src.services.tool_service import tool_runner #, knowledge_base_tool_
+from src.services.tool_service import tool_runner
+from src.services.model_service import get_llm_model
 
 logging.basicConfig(level=logging.INFO)
 #tool_runnable = knowledge_base_tool_()
@@ -145,8 +143,7 @@ class AgentFactory:
 
 
 def initialize_agents():
-    llm = ChatOpenAI(model="gpt-4o")
-    factory = AgentFactory(llm)
+    factory = AgentFactory(get_llm_model())
     agents = {
         "Conversation-Agent": factory.create_conversation_agent(),
         "Procurement-Specialist-Agent": factory.create_procurement_specialist_agent(),

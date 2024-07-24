@@ -97,45 +97,4 @@ initial_state: AgentState = {
     "required_info_template": None,
     "captured_info": needs_to_capture,
     "messages": []
-## Commented out the below code as it confuses the conversation agent to behave as intended
-#     "required_info_template": {
-#   "Title": "",
-#   "Description": {
-#     "Business need": "",
-#     "Project scope": "",
-#     "Expected deliverables": "",
-#     "Impact if not approved": "",
-#     "Type of contract": "",
-#     "Estimated cost": ""
-#   },
-#   "Category": "",
-#   "Financial Details": {
-#     "Start Date": "",
-#     "End Date": "",
-#     "Expected Amount": "",
-#     "Funding Source": ""
-#   }
-# }
-# ,
-#     "captured_info": {
-#   "Title": "",
-#   "Description": {
-#     "Business need": "",
-#     "Project scope": "",
-#     "Expected deliverables": "",
-#     "Impact if not approved": "",
-#     "Type of contract": "",
-#     "Estimated cost": ""
-#   },
-#   "Category": "",
-#   "Financial Details": {
-#     "Start Date": "",
-#     "End Date": "",
-#     "Expected Amount": "",
-#     "Funding Source": ""
-#   }
-# },
-#     "messages": [],
-#     "response":"",
-#     "last_message":{}
 }

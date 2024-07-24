@@ -12,9 +12,6 @@ RUN pip install poetry && poetry lock --no-update && poetry install --no-root
 # Verify Uvicorn installation
 RUN poetry run uvicorn --version
 
-RUN apt-get update && apt-get install -y \
-    libgl1-mesa-glx \
-    libglib2.0-0
 # Copy project files
 COPY . .
 

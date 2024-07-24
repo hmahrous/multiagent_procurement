@@ -8,15 +8,38 @@ import os
 from src.api.endpoints import SessionManager
 from src.schemas.requests import ChatInput, ModeInput, idInput
 from src.scripts.helpers import ingest_new_document_vectordb, get_ingested_filenames, delete_file_vectordb
-from src.rag.app.book import chunk
+from langchain_community.document_loaders import PyPDFLoader
 from uuid import uuid4
 import json
 
-def dummy(prog=None, msg=""):
-    pass
 
 session_manager = SessionManager()
 router = APIRouter()
+
+def is_completed(value):
+    if isinstance(value, dict):
+        return all(is_completed(v) for v in value.values())
+    elif isinstance(value, list):
+        return all(is_completed(v) for v in value)
+    else:
+        return bool(value)
+
+def transform_initial_state_UI_bol(schema):
+    initial_state = schema["captured_info"]
+    initial_state_UI_bol = {}
+    for key, value in initial_state.items():
+        flat_dict = {}
+        if isinstance(value, dict):
+            for sub_key, sub_value in value.items():
+                if isinstance(sub_value, dict):
+                    for inner_key, inner_value in sub_value.items():
+                        flat_dict[inner_key] = is_completed(inner_value)
+                else:
+                    flat_dict[sub_key] = is_completed(sub_value)
+        else:
+            flat_dict['completed'] = is_completed(value)
+        initial_state_UI_bol[key] = flat_dict
+    return initial_state_UI_bol
 
 
 @router.post(
@@ -29,8 +52,8 @@ async def chat_with_gpt(input_data: ChatInput, session_id: idInput, mode: ModeIn
     custom_agent = session_manager.get_session(session_id.id_)
     await custom_agent.add_user_message("", f"""{input_data.message}""")
     response, initial_state = await custom_agent.process_messages(mode=mode.mode)
-
-    return JSONResponse(content={"response": response, "schema_": initial_state})
+    initial_state_UI_bol = transform_initial_state_UI_bol(initial_state)
+    return JSONResponse(content={"response": response, "schema_": initial_state_UI_bol})
 
 @router.get("/create_session")
 def create_session():
@@ -51,9 +74,12 @@ async def ingest_document(file: UploadFile = File(...)):
             shutil.copyfileobj(file.file, buffer)
         # Process the file based on its extension
         if file.filename.endswith(".pdf"):
-            chunks = chunk(temp_file_path, lang="English", callback=dummy)
-        elif file.filename.endswith(".docx"):
-            chunks = chunk(temp_file_path, lang="English", callback=dummy)
+            loader = PyPDFLoader(temp_file_path)
+            chunks = loader.load_and_split()
+            print(f'length of chunks is {len(chunks)}')
+            chunks = [{"content_with_weight": str(page.page_content)} for page in chunks]
+            print(f'sample chunk is {chunks[0]}')
+            #chunks = chunk(temp_file_path, lang="English", callback=dummy)
         elif file.filename.endswith(".json"):
             with open(temp_file_path, "r", encoding="utf-8") as f:
                 data = json.load(f)

@@ -1,48 +1,18 @@
-# ----------------------------------------------------------------------------------------------------------------#
-# This is an example async implementation of using vector capabilities                                            #
-# of postgres using extension pgvector and langchain.                                                             #
-# For information about available functions, refer to                                                             #
-# https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.pgvector.PGVector.html #
-# ----------------------------------------------------------------------------------------------------------------#
-
 import hashlib
 import json
 import os
 import pdb
 import shutil
 from typing import Dict, List
-
 from dotenv import find_dotenv, load_dotenv
 from langchain.docstore.document import Document
-from langchain.embeddings.openai import OpenAIEmbeddings
 from langchain.vectorstores.faiss import FAISS
-from langchain_community.vectorstores.pgvector import PGVector
-from langchain_openai import OpenAIEmbeddings
-from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.sql import text
-
-from src.core.config import get_settings
-from src.schemas.requests import MetaData
-from src.schemas.responses import StoreChunksOutput
+from src.services.model_service import get_embedding_model
 
 load_dotenv(find_dotenv())
 
-#HASH_MAPPING_FILE = "hash_mapping.json"
-EMBEDDING_MODEL_NAME = "text-embedding-3-large"
-#VECTOR_STORE_DIR = "knowledge_base/local_faiss_vector_store/"
 VECTOR_STORE_DIR = "/api/knowledge_base/vector_store"
 HASH_MAPPING_FILE = "/api/knowledge_base/hash_mapping.json"
-
-EMBEDDING = OpenAIEmbeddings(model=EMBEDDING_MODEL_NAME)
-NUMBER_OF_CHUNKS_CONSIDERED = 5
-MINIMUM_RELEVANCE_SCORE = 0.8
-POSTGRES_COLLECTION_NAME = "test_vector_table"
-try:
-    DATABASE_URL = get_settings().sqlalchemy_sync_database_uri.render_as_string(
-        hide_password=False
-    )
-except:
-    DATABASE_URL = ""
 
 
 class VectorStore_local_faiss:
@@ -50,7 +20,6 @@ class VectorStore_local_faiss:
 
     def __init__(self):
         load_dotenv(find_dotenv())
-        self.EMBEDDING_MODEL_NAME = "text-embedding-3-large"
         self.VECTOR_STORE_DIR = "knowledge_base/local_faiss_vector_store/"
         self.knowledgebase_json_file = (
             "knowledge_base/big_software_process_new_request_no_risk.json"
@@ -58,7 +27,7 @@ class VectorStore_local_faiss:
         # check if directory exist if not create
         if not os.path.exists(self.VECTOR_STORE_DIR):
             os.makedirs(self.VECTOR_STORE_DIR)
-        self.embeddings_model = OpenAIEmbeddings(model=self.EMBEDDING_MODEL_NAME)
+        self.embeddings_model = get_embedding_model()
         #self.run_json_ingestion(mode="overwrite")
 
     def _ingest_new_document_vectordb(self, identifier: str, content: str) -> Dict[str, str]:
@@ -109,72 +78,4 @@ class VectorStore_local_faiss:
     def get_EMBEDDING_MODEL_NAME(self):
         return self.EMBEDDING_MODEL_NAME
 
-
-class VectorStore_postgres:
-    """A class that wraps Vector store implementation of Postgres"""
-
-    def __init__(self):
-        self._pg_vector_db = None
-
-    def get_vector_db(self):
-        """
-        Get pg_vector db instance
-        @return:
-        """
-        if not self._pg_vector_db:
-            self._pg_vector_db = PGVector(
-                collection_name=POSTGRES_COLLECTION_NAME,
-                connection_string=DATABASE_URL,
-                embedding_function=EMBEDDING,
-            )
-        return self._pg_vector_db
-
-    async def query(self, query: str) -> dict:
-        """
-        Query vector store to find similar documents with relevance score.
-        @param query:
-        @return:
-        """
-        result = await self.get_vector_db().asimilarity_search_with_relevance_scores(
-            query,
-            k=NUMBER_OF_CHUNKS_CONSIDERED,
-            score_threshold=MINIMUM_RELEVANCE_SCORE,
-        )
-        return {"chunks": result}
-
-    async def store_chunks(
-            self, texts: List[str], metadata: List[MetaData]
-    ) -> StoreChunksOutput:
-        """
-        Store chunks to vector store.
-        @param texts:
-        @param metadata:
-        @return:
-        """
-        stripped_texts = [txt.replace("\n", " ") for txt in texts]
-
-        result = await self.get_vector_db().aadd_texts(
-            texts=stripped_texts, metadatas=[{"page": i.page} for i in metadata]
-        )
-        return StoreChunksOutput(UUIDS=result)
-
-    @staticmethod
-    async def delete_chunks(session: AsyncSession) -> None:
-        """
-        Delete chunks from vector store
-        @param session:
-        """
-        # The query can be changed as per the needs. Here is the sample implementation of filtering data.
-        query = text("select uuid from langchain_pg_embedding")
-        result = await session.scalars(query)
-        uuids = result.all()
-
-        if len(uuids):
-            # Deleting chunks fromm vector store
-            query = text(f"Delete from langchain_pg_embedding")
-            await session.execute(query)
-            await session.commit()
-
-
 vector_store_faiss = VectorStore_local_faiss()
-vector_store = VectorStore_postgres()

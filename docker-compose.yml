@@ -14,4 +14,4 @@ services:
     environment:
       - PYTHONPATH=/api/src
     volumes:
-      - ./data:/api/knowledge_base  # Add this line
+      - ./data:/api/knowledge_base
