@@ -93,6 +93,7 @@ class MessagingPoolManager:
     async def _handle_messages(self, agent_name, messages):
         print(f'here is messages {messages}')
         message_contents = self._prepare_message_contents(agent_name, messages)
+        print(f'{agent_name}: passed in message{message_contents}')
         response_dict = await self.send_message(agent_name, message_contents)
         async with lock:
             self.initial_state["messages"].append(response_dict)
