@@ -75,22 +75,33 @@ class AgentFactory:
     def __init__(self, llm):
         self.llm = llm
         self.system_prompts = {
-            "Conversation-Agent": SystemPrompts.CONVERSATION_AGENT,
+            "Finance-Agent": SystemPrompts.FINANCE_AGENT,
+            "Medical-Agent": SystemPrompts.MEDICAL_AGENT,
             "Procurement-Specialist-Agent": SystemPrompts.PROCUREMENT_SPECIALIST_AGENT,
             "Note-Take-Agent": SystemPrompts.NOTE_TAKE_AGENT,
             "Guardrails-Agent": SystemPrompts.GUARDRAILS_AGENT,
-        }
+        }    
 
-    def create_conversation_agent(self):
+    def create_finance_agent(self):
         prompt = ChatPromptTemplate.from_messages(
             [
-                ("system", self.system_prompts["Conversation-Agent"]),
+                ("system", self.system_prompts["Finance-Agent"]),
                 MessagesPlaceholder(variable_name="messages"),
             ]
         )
         agent_notetaker = prompt | self.llm | StrOutputParser()
-        return AgentMain("Conversation-Agent", agent_notetaker, prompt_formatter=None)
+        return AgentMain("Finance-Agent", agent_notetaker, prompt_formatter=None)
 
+    def create_medical_agent(self):
+        prompt = ChatPromptTemplate.from_messages(
+            [
+                ("system", self.system_prompts["Medical-Agent"]),
+                MessagesPlaceholder(variable_name="messages"),
+            ]
+        )
+        agent_notetaker = prompt | self.llm | StrOutputParser()
+        return AgentMain("Finance-Agent", agent_notetaker, prompt_formatter=None)
+    
     def create_procurement_specialist_agent(self):
         prompt = ChatPromptTemplate.from_messages(
             [
@@ -148,7 +159,8 @@ def initialize_agents():
     llm = ChatOpenAI(model="gpt-4o")
     factory = AgentFactory(llm)
     agents = {
-        "Conversation-Agent": factory.create_conversation_agent(),
+        "Finance-Agent": factory.create_finance_agent(),
+        "Medical-Agent": factory.create_medical_agent(),
         "Procurement-Specialist-Agent": factory.create_procurement_specialist_agent(),
         "Note-Take-Agent": factory.create_note_take_agent(),
         "Guardrails-Agent": factory.create_guardrails_agent(),
