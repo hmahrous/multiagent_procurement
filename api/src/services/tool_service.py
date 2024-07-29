@@ -1,40 +1,17 @@
 import os
 from typing import Annotated
-
-from langchain.embeddings.openai import OpenAIEmbeddings
 from langchain.vectorstores.faiss import FAISS
 from langchain_core.tools import tool
-from src.services.vector_service import EMBEDDING_MODEL_NAME, VECTOR_STORE_DIR
-from typing import Dict, List
+from src.services.vector_service import VECTOR_STORE_DIR
+from src.services.model_service import get_embedding_model
 
-
-
-# @tool
-# async def knowledge_base_tool_(
-#     theme: Annotated[str, "The theme of the user's question."] = "",
-# ) -> Annotated[str, "Concatenated texts from the similarity search results."]:
-#     """
-#     This tool will load the knowledge base that will be used to answer requests.
-#     :param theme: The theme of the user's question.
-#     :return: Concatenated texts from the similarity search results.
-#     """
-#     search_result = await vector_store.query(theme)
-
-#     if not search_result["chunks"]:
-#         return "No relevant information found."
-
-#     relevant_texts = []
-#     for chunk in search_result["chunks"]:
-#         relevant_texts.append(chunk["text"])
-#     return "\n".join(relevant_texts)
 
 class knowledge_base_tool_faiss():
     def __init__(self):
         empty_string = ''
         print('knowledge base call')
         db_paths = self.get_directory_paths(VECTOR_STORE_DIR)
-        embeddings_model = EMBEDDING_MODEL_NAME
-        embeddings_model = OpenAIEmbeddings(model=embeddings_model)
+        embeddings_model = get_embedding_model()
         if not db_paths:
             return empty_string
         self.db = None
@@ -76,8 +53,7 @@ class FaissDBConnection:
             for root, dirs, files in os.walk(directory):
                 for name in dirs:
                     db_paths.append(os.path.join(root, name))
-            embeddings_model = EMBEDDING_MODEL_NAME
-            embeddings_model = OpenAIEmbeddings(model=embeddings_model)
+            embeddings_model = get_embedding_model()
             if not db_paths:
                 return
             for i, db_path in enumerate(db_paths):
@@ -107,42 +83,3 @@ def tool_runner(
     docs = db.similarity_search(theme)
     texts = [doc.page_content for doc in docs]
     return "******Knowledge Base RAG output:******\n\n" + "\n".join(texts)
-
-
-
-# def get_vectordb_paths() -> List[str]:
-#     """
-#     Get the paths of existing vector databases.
-#     :return: List of paths.
-#     """
-#     if os.path.exists(VECTOR_STORE_DIR):
-#         return [os.path.join(VECTOR_STORE_DIR, d) for d in os.listdir(VECTOR_STORE_DIR) if os.path.isdir(os.path.join(VECTOR_STORE_DIR, d))]
-#     return []
-
-# @tool
-# def knowledge_base_tool(
-#     theme: Annotated[str, "The theme of the user's question."] = ''
-# ) -> Annotated[str, "Concatenated texts from the similarity search results."]:
-#     """
-#     This tool will load the knowledge base that will be used to answer requests.
-#     :param theme: The theme of the user's question.
-#     :return: Concatenated texts from the similarity search results.
-#     """
-#     print('knowledge base call')
-#     db_paths = get_vectordb_paths()
-#     print(f'The length of the paths is: {len(db_paths)}')
-#     if not db_paths:
-#         return None
-#     embeddingss = OpenAIEmbeddings(model=EMBEDDING_MODEL_NAME)
-#     db = None
-#     for i, db_path in enumerate(db_paths):
-#         if i == 0:
-#             db = FAISS.load_local(db_path, embeddingss, allow_dangerous_deserialization=True)
-#         else:
-#             db_next = FAISS.load_local(db_path, embeddingss, allow_dangerous_deserialization=True)
-#             db.merge_from(db_next)
-#     if db is None:
-#         return ""
-#     docs = db.similarity_search(theme)
-#     texts = [doc.page_content for doc in docs]
-#     return "******Knowledge Base RAG output:******\n\n" + "\n".join(texts)

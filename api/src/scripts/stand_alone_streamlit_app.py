@@ -29,6 +29,7 @@ def get_session_id():
 
 
 # Function to send a prompt and get the response using the session ID
+# Function to send a prompt and get the response using the session ID
 def get_response(prompt, session_id, mode):
     url = "http://0.0.0.0:8080/chat/message"
     data = {
@@ -48,18 +49,25 @@ def get_response(prompt, session_id, mode):
         print(response)
         if isinstance(response, list):
             for res in response:
-                st.session_state.messages.append(res)
-                message = res
+                if isinstance(res, dict) and "from" in res and "content" in res:
+                    st.session_state.messages.append(res)
+                    message = res
+                    st.markdown(
+                        f"<span style='color: black; background-color: lightgray; padding: 5px; border-radius: 5px;'>**{message['from']}:** {message['content']}</span>",
+                        unsafe_allow_html=True)
+                else:
+                    print(f"Unexpected response format: {res}")
+        else:
+            if isinstance(response, dict) and "from" in response and "content" in response:
+                st.session_state.messages.append(response)
+                message = response
                 st.markdown(
                     f"<span style='color: black; background-color: lightgray; padding: 5px; border-radius: 5px;'>**{message['from']}:** {message['content']}</span>",
                     unsafe_allow_html=True)
-        else:
-            st.session_state.messages.append(response)
-            message = response
-            st.markdown(
-                f"<span style='color: black; background-color: lightgray; padding: 5px; border-radius: 5px;'>**{message['from']}:** {message['content']}</span>",
-                unsafe_allow_html=True)
+            else:
+                print(f"Unexpected response format: {response}")
     else:
+        print(f"Error: {response.status_code}")
         return {"error": f"Error: {response.status_code}"}
 
 
