@@ -16,28 +16,50 @@ logging.basicConfig(level=logging.INFO)
 class MessagingPoolManager:
     def __init__(self, agents):
         self.pool: List[Dict[str, Any]] = []
+        self.subscriptions: Dict[str, List[str]] = {}
         self.processed_messages: Dict[str, List[str]] = {}
         self.msg_id_counter = 1
         self.agents = agents
         self.initial_state = copy.deepcopy(initial_state)
+        self._initialize_subscriptions()
 
+    def _initialize_subscriptions(self):
+        # Subscribe agents to specific senders
+        self.subscribe("Procurement-Specialist-Agent", ["user", "Note-Take-Agent"])
+        self.subscribe("Note-Take-Agent", ["user"])
+        self.subscribe("Guardrails-Agent", ["user"])
+        self.subscribe("Medical-Agent", ["user"])
+        self.subscribe("Finance-Agent", ["user"])
+
+
+    def subscribe(self, agent_name: str, senders: List[str]):
+        self.subscriptions[agent_name] = senders
+        self.processed_messages[agent_name] = []
+
+    def get_messages(self, agent_name: str) -> List[Dict[str, Any]]:
+        senders = self.subscriptions.get(agent_name, [])
+        messages = [msg for msg in self.pool if msg['from'] in senders and msg['id'] not in self.processed_messages[agent_name]]
+        #logging.info(f"Messages for agent {agent_name}: {messages}")
+        return messages
+    
+    def mark_as_processed(self, agent_name: str, message_id: str):
+        self.processed_messages[agent_name].append(message_id)
+    
     async def process_messages(self, mode="group"):
         results = []
         while True:
             if not self.pool:
                 return results
-            # get user message
-            user_message = self.pool[-1]
-            # pass to guardrails agent
-            guardrail_response = await self._send_message("Guardrails-Agent", user_message)
+            guardrail_response = await self._handle_messages("Guardrails-Agent")
+            #user_message = self.pool[-1]
+            #guardrail_response = await self._send_message("Guardrails-Agent", user_message)
             if 'invalid' in guardrail_response['content'].lower():
                 results.append(guardrail_response)
                 return [results, self.initial_state] if mode == 'group' else [guardrail_response, self.initial_state]
             # pass message to other agents in the pool
             other_agents = [agent for agent in self.agents if agent != "Guardrails-Agent"]
             # Prepare the messages and invoke the agents.
-            tasks = [self._handle_messages(agent_name, user_message) for agent_name in other_agents]
-            # Run the agents tasks concurrently
+            tasks = [self._handle_messages(agent_name) for agent_name in other_agents]
             results = await asyncio.gather(*tasks)
             # update state of the query
             self.initial_state["query_fulfilled"] = True
@@ -105,7 +127,12 @@ class MessagingPoolManager:
                 filtered_messages.append(message)
         return filtered_messages[-5:]
 
-    async def _handle_messages(self, agent_name, messages):
+    async def _handle_messages(self, agent_name):
+        subscribed_messages = self.get_messages(agent_name)
+        for message in subscribed_messages:
+            self.mark_as_processed(agent_name, message['id'])
+        messages = subscribed_messages
+        #print(f'subscribed messages {agent_name} are {subscribed_messages}')
         message_contents = self._prepare_message_contents(agent_name, messages)
         response_dict = await self._send_message(agent_name, message_contents)
         async with lock:
@@ -128,7 +155,7 @@ class MessagingPoolManager:
             common_content["content"] = "\n".join([f'{message["from"]}:{message["content"]}' for message in messages])
         else:
             common_content[
-                "content"] = f'continue from history conversations: ...{str(self._get_agent_messages(agent_name))} \n previously captured_info {self.initial_state["captured_info"]} \n current query:' + \
+                "content"] = f'continue from history conversations: ...{str(self._get_agent_messages(agent_name))} \n current query:' + \
                              "\n".join([f'{message["from"]}:{message["content"]}' for message in messages])
         return common_content
 
@@ -139,7 +166,7 @@ class MessagingPoolManager:
             response = await agent.receive_message(message)  # Ensure await here
             if response:
                 formatted_response = self._format_response(agent_name, response)
-                logging.info(f"Formatted response from {agent_name}: {formatted_response}")
+                #logging.info(f"Formatted response from {agent_name}: {formatted_response}")
                 await self._handle_agent_response(agent_name, formatted_response)  # Ensure await here
                 return formatted_response
 
@@ -149,7 +176,7 @@ class MessagingPoolManager:
         try:
             response = json.loads(response)
             try:
-                response = json.loads(response["content"])
+                response = json.loads(response["from"])
                 return response
             except:
                 return response
