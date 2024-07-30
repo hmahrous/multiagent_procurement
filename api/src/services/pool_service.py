@@ -64,9 +64,13 @@ class MessagingPoolManager:
             # Consolidate responses if more than one relevant result is found
             if len(relevant_results) > 1:
                 response_to_user = self._consolidate_responses(relevant_results)
+                
             else:
                 response_to_user = relevant_results[0]['content'] if relevant_results else 'No relevant response'
-
+            response_to_user = {"content": response_to_user,
+                "from": "assistant",
+                "role": "assistant"}
+            results.append(response_to_user)
             return [results, self.initial_state] if mode == 'group' else [response_to_user, self.initial_state]
 
     async def add_user_message(self, content: str):
@@ -84,6 +88,25 @@ class MessagingPoolManager:
         self.initial_state["user_query"] = content
         self.initial_state["messages"].append(message)
         self._add_message(message)
+
+    def _update_dict(self, original, updates):
+        for key, value in updates.items():
+            if isinstance(value, dict) and key in original and isinstance(original[key], dict):
+                self._update_dict(original[key], value)
+            elif isinstance(value, list) and key in original and isinstance(original[key], list):
+                for index, item in enumerate(value):
+                    if isinstance(item, dict):
+                        if index < len(original[key]):
+                            self._update_dict(original[key][index], item)
+                        else:
+                            original[key].append(item)
+                    else:
+                        if index < len(original[key]):
+                            original[key][index] = item
+                        else:
+                            original[key].append(item)
+            else:
+                original[key] = value
 
     def _initialize_subscriptions(self):
         """Initialize agent subscriptions to specific message senders."""
@@ -148,10 +171,11 @@ class MessagingPoolManager:
         Returns:
             str: Consolidated response.
         """
-        consolidate_prompt = f"Given the list of responses by several agents, consolidate their responses into one final message for the reader.\nResponses:\n{responses}"
+        user_message = [msg for msg in self.initial_state["messages"] if msg.get("from") in ['user']][-1]
+        consolidate_prompt = f"Given the list of responses by several agents, select the response that most accurately addresses the user's needs and aligns with the context of their inquiry. Prioritize responses that are directly relevant to the user's query and are clearly part of an ongoing process. If it is unclear which response to choose, unify the relevant parts of their responses into one coherent and comprehensive reply.\nUser message: {user_message}\nResponses:\n{responses}"
         llm = get_llm_model()
         prompt = ChatPromptTemplate.from_messages([
-            ("system", 'You are a helpful AI assistant great at summarization'),
+            ("system", "You are an AI assistant skilled at identifying and selecting the most relevant and context-appropriate response from a list of responses. Your goal is to provide a coherent and helpful reply that directly addresses the user's needs, prioritizing responses that continue an ongoing process or provide clear guidance."),
             MessagesPlaceholder(variable_name="messages"),
         ])
         chain = prompt | llm | StrOutputParser()
@@ -256,6 +280,7 @@ class MessagingPoolManager:
             response = await agent.receive_message(message)
             if response:
                 formatted_response = self._format_response(agent_name, response)
+                print(f'formatted_response is {formatted_response}')
                 await self._handle_agent_response(agent_name, formatted_response)
                 return formatted_response
 
@@ -270,12 +295,15 @@ class MessagingPoolManager:
                 Dict[str, Any]: Formatted response.
         """
         if isinstance(response, dict):
+            if 'from' not in response:
+                return self._get_default_response_format(role, response)
             return response
         try:
             response = json.loads(response)
-            response = json.loads(response.get("from", "{}"))
+            if 'from' not in response:
+                return self._get_default_response_format(role, response)
             return response
-        except json.JSONDecodeError:
+        except:
             return self._get_default_response_format(role, response)
 
     def _get_default_response_format(self, role: str, response: Any) -> Dict[str, Any]:
@@ -322,12 +350,12 @@ class MessagingPoolManager:
         if not isinstance(formatted_response, dict):
             logging.error(f"Expected formatted_response to be a dict, got {type(formatted_response)} instead.")
             formatted_response = self._get_default_response_format(agent_name, formatted_response)
-
+            # 
         if agent_name == "Note-Take-Agent":
             if formatted_response["type"] == "template":
                 self.initial_state["required_info_template"] = formatted_response["content"]
-            if formatted_response["type"] == "state_update":
-                self.initial_state["captured_info"] = formatted_response["content"]
+            if formatted_response["type"] == "state_update" and formatted_response["content"]:
+                self._update_dict(self.initial_state["captured_info"], formatted_response["content"])
 
         self._add_message(formatted_response)
 
